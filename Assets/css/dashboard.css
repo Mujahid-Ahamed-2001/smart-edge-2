@@ -1,0 +1,200 @@
+.dashboard-home{
+
+    min-height:80vh;
+
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:space-between;
+
+    padding:30px 15px;
+}
+
+/*-----------------------------*/
+/* Welcome */
+/*-----------------------------*/
+
+.welcome-section{
+
+    margin-top:10px;
+}
+
+.welcome-badge{
+
+    display:inline-block;
+
+    padding:8px 18px;
+
+    border-radius:50px;
+
+    background:#eef4ff;
+
+    color:#4f6df5;
+
+    font-size:13px;
+
+    font-weight:600;
+
+    margin-bottom:20px;
+}
+
+.welcome-content h1{
+
+    font-size:42px;
+
+    font-weight:800;
+
+    color:#1f2937;
+
+    margin-bottom:18px;
+}
+
+.welcome-content h1 span{
+
+    color:#4f6df5;
+}
+
+.welcome-content p{
+
+    width:100%;
+    max-width:100%;
+
+    font-size:17px;
+
+    line-height:30px;
+
+    color:#6b7280;
+}
+
+/*-----------------------------*/
+/* Bottom Card */
+/*-----------------------------*/
+
+.home-info-card{
+
+    background:#eef5ff;
+
+    border-radius:22px;
+
+    padding:35px 40px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-between;
+
+    box-shadow:
+    0 10px 40px rgba(0,0,0,.05);
+
+    border:1px solid #dde8ff;
+}
+
+.home-info-left{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:25px;
+
+    max-width: 1000px;
+    width: 70%;
+}
+
+.home-info-icon{
+
+    width:72px;
+    height:72px;
+
+    border-radius:50%;
+
+    background:
+    linear-gradient(135deg,#4f6df5,#3156ec);
+
+    color:white;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    font-size:34px;
+
+    flex-shrink:0;
+
+    box-shadow:
+    0 12px 30px rgba(79,109,245,.35);
+}
+
+.home-info-left h4{
+
+    font-size:26px;
+
+    font-weight:700;
+
+    color:#1f2937;
+
+    margin-bottom:10px;
+}
+
+.home-info-left p{
+
+    margin:0;
+
+    font-size:16px;
+
+    line-height:30px;
+
+    color:#5f6b7a;
+}
+
+.home-info-right img{
+
+    width:250px;
+
+    opacity:.95;
+}
+.container-fluid
+{
+    background-color: #F5F6FA !important;
+}
+
+/*-----------------------------*/
+/* Responsive */
+/*-----------------------------*/
+
+@media(max-width:992px){
+
+    .welcome-content h1{
+
+        font-size:32px;
+    }
+
+    .welcome-content p{
+
+        width:100%;
+    }
+
+    .home-info-card{
+
+        flex-direction:column;
+
+        text-align:center;
+
+        gap:30px;
+    }
+
+    .home-info-left{
+
+        flex-direction:column;
+    }
+
+    .home-info-right img{
+
+        width:170px;
+    }
+
+}

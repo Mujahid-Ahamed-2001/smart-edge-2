@@ -1,0 +1,581 @@
+/*=====================================================
+Card
+=====================================================*/
+
+.expense-card{
+
+    background:#fff;
+
+    border-radius:20px;
+
+    overflow:hidden;
+
+    border:1px solid #ECEEF6;
+
+    box-shadow:
+        0 12px 40px rgba(0,0,0,.05);
+
+    transition:.35s;
+    padding: 0 25px 25px;
+}
+.default_badge, .status_badge{
+
+    cursor:pointer;
+    transition: 1s all;
+
+}
+.default_badge i, .status_badge i{
+
+    cursor:pointer;
+    transition: 1s all;
+
+}
+
+.expense-card:hover{
+
+    transform:translateY(-3px);
+
+    box-shadow:
+        0 0 60px rgba(92,70,255,.10);
+
+}
+
+.expense-card-header{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    padding:28px 32px;
+
+}
+
+.expense-title{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:18px;
+
+}
+
+.expense-icon{
+
+    width:62px;
+
+    height:62px;
+
+    border-radius:18px;
+
+    background:linear-gradient(135deg,#8B5CF6,#5B3DF5);
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    color:#fff;
+
+    font-size:26px;
+
+    box-shadow:
+        0 10px 25px rgba(91,61,245,.25);
+
+}
+
+.expense-title h3{
+
+    margin:0;
+
+    font-size:27px;
+
+    font-weight:700;
+
+}
+
+.expense-title p{
+
+    margin:6px 0 0;
+
+    color:#7C8698;
+
+    font-size:15px;
+
+}
+
+
+/*=====================================================
+Divider
+=====================================================*/
+
+.card-divider{
+
+    height:1px;
+
+    background:#EEF1F7;
+
+}
+
+
+/*=====================================================
+Button
+=====================================================*/
+
+.btn-add-expense{
+
+    height:52px;
+
+    padding:0 28px;
+
+    border:none;
+
+    border-radius:14px;
+
+    background:linear-gradient(135deg,#6C63FF,#5138EE);
+
+    color:#fff;
+
+    font-size:15px;
+
+    font-weight:600;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:10px;
+
+    transition:.30s;
+
+}
+
+.btn-add-expense:hover{
+
+    color:#fff;
+
+    transform:translateY(-2px);
+
+    box-shadow:
+        0 15px 35px rgba(91,61,245,.35);
+
+}
+
+
+/*=====================================================
+Table
+=====================================================*/
+
+.expense-table{
+
+    margin:0;
+
+    border:1px solid #EEF1F6;
+
+    border-radius:18px;
+
+    overflow:hidden;
+
+}
+
+.expense-table thead{
+
+    background:#FAFBFE;
+
+}
+
+.expense-table thead th{
+
+    padding:20px;
+
+    border:none;
+
+    font-weight:700;
+
+    color:#4A5568;
+
+    font-size:14px;
+
+}
+
+.expense-table tbody td{
+
+    padding:20px;
+
+    vertical-align:middle;
+
+    border-top:1px solid #EEF1F6;
+
+}
+
+.expense-table tbody tr{
+
+    transition:.25s;
+
+}
+
+.expense-table tbody tr:hover{
+
+    background:#FBFBFF;
+
+}
+
+
+/*=====================================================
+Expense Name
+=====================================================*/
+
+.expense-name{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:12px;
+
+    font-weight:600;
+
+}
+
+.expense-color{
+
+    width:10px;
+
+    height:10px;
+
+    border-radius:50%;
+
+    background:#6C63FF;
+
+}
+
+
+/*=====================================================
+Badges
+=====================================================*/
+
+.badge{
+
+    padding:8px 14px;
+
+    border-radius:50px;
+
+    display:inline-flex;
+
+    align-items:center;
+
+    gap:8px;
+
+    font-size:13px;
+
+    font-weight:600;
+
+}
+
+.badge-success{
+
+    color:#0F9D58;
+
+    background:#E8FFF1;
+
+}
+
+.badge-warning{
+
+    background:#FFF8E6;
+
+    color:#F39C12;
+
+}
+
+.badge-danger{
+
+    background:#FFECEC;
+
+    color:#E74C3C;
+
+}
+
+
+/*=====================================================
+Action Buttons
+=====================================================*/
+
+.btn-action{
+
+    width:42px;
+
+    height:42px;
+
+    border:none;
+
+    border-radius:12px;
+
+    margin-right:8px;
+
+    transition:.30s;
+
+    display:inline-flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    font-size:18px;
+
+}
+
+.btn-edit{
+
+    background:#EEF2FF;
+
+    color:#4F46E5;
+
+}
+
+.btn-edit:hover{
+
+    background:#4F46E5;
+
+    color:#fff;
+
+    transform:translateY(-2px);
+
+}
+
+.btn-delete{
+
+    background:#FFECEC;
+
+    color:#E74C3C;
+
+}
+
+.btn-delete:hover{
+
+    background:#E74C3C;
+
+    color:#fff;
+
+    transform:translateY(-2px);
+
+}
+
+
+/*=====================================================
+Footer
+=====================================================*/
+
+.dashboard-footer{
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    gap:18px;
+
+    margin-top:45px;
+
+    color:#79839B;
+
+    font-size:14px;
+
+}
+
+.footer-icon{
+
+    width:48px;
+
+    height:48px;
+
+    border-radius:50%;
+
+    background:#F3EEFF;
+
+    color:#6C63FF;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    font-size:22px;
+
+}
+
+.dashboard-footer a{
+
+    color:#6C63FF;
+
+    text-decoration:none;
+
+    font-weight:600;
+
+}
+
+.dashboard-footer a:hover{
+
+    text-decoration:underline;
+
+}
+
+
+/*=====================================================
+Utility
+=====================================================*/
+
+.rounded-20{
+
+    border-radius:20px;
+
+}
+
+.shadow-soft{
+
+    box-shadow:0 12px 35px rgba(0,0,0,.05);
+
+}
+
+.cursor-pointer{
+
+    cursor:pointer;
+
+}
+
+.transition{
+
+    transition:.30s;
+
+}
+
+
+/*=====================================================
+Animations
+=====================================================*/
+
+@keyframes fadeUp{
+
+    from{
+
+        opacity:0;
+
+        transform:translateY(18px);
+
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:translateY(0);
+
+    }
+
+}
+
+.expense-card{
+
+    animation:fadeUp .45s ease;
+
+}
+
+
+/*=====================================================
+Responsive
+=====================================================*/
+
+@media (max-width:991px){
+
+    .expense-card-header{
+
+        flex-direction:column;
+
+        align-items:flex-start;
+
+        gap:20px;
+
+    }
+
+    .btn-add-expense{
+
+        width:100%;
+
+        justify-content:center;
+
+    }
+
+}
+
+@media (max-width:768px){
+
+    .expense-card-header{
+
+        padding:22px;
+
+    }
+
+    .expense-table{
+
+        margin:15px;
+
+    }
+
+    .expense-title h3{
+
+        font-size:22px;
+
+    }
+
+    .expense-title p{
+
+        font-size:14px;
+
+    }
+
+    .expense-icon{
+
+        width:55px;
+
+        height:55px;
+
+        font-size:22px;
+
+    }
+
+}
+
+@media (max-width:576px){
+
+    .page-breadcrumb{
+
+        flex-wrap:wrap;
+
+    }
+
+    .expense-table thead th,
+
+    .expense-table tbody td{
+
+        padding:15px;
+
+        font-size:13px;
+
+    }
+
+    .btn-action{
+
+        width:38px;
+
+        height:38px;
+
+        font-size:16px;
+
+    }
+
+}

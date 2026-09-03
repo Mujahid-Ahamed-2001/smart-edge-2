@@ -1,0 +1,9 @@
+# Enable Rewrite Engine
+RewriteEngine On
+
+# Skip existing files and directories
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# Print Quote URL
+RewriteRule ^print-quote-([A-Za-z0-9_-]+)/?$ print-quote.php?quotation_no=$1 [NC,L,QSA]

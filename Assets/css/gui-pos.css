@@ -1,0 +1,349 @@
+.product-cat
+{
+    /* height: 200px; */
+    /* background-color: red; */
+}
+.rotate {
+    transition: transform 0.4s ease-in-out;
+    transform: rotate(360deg);
+}
+.search-div
+{
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+.product-list
+{
+    height: 64vh;
+    /* background-color: rgb(71, 71, 71); */
+    overflow-y: auto;
+    overflow-x: hidden;
+    transition: all 1s;
+}
+hr
+{
+    margin-bottom: 10px;
+
+}
+a
+{
+    color:#5A6A85;
+}
+p
+{
+    padding: 0 !important;
+    margin: 0 !important;
+    font-size: 10px;
+}
+.product-price
+{
+    font-size: 12px !important;
+    font-weight: bolder !important;
+}
+.card
+{
+    margin-bottom: 0 !important;
+}
+.product-img
+{
+    border-radius: 7px 7px 0 0 ;
+    height: 175px;
+    object-fit:cover;
+}
+.qty-badge {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background-color: #5D87FF;
+    color: white;
+    padding: 5px 10px;
+    font-size: 14px;
+    font-weight: bold;
+    border-radius: 15px;
+}
+.hold-Head
+{
+    border-bottom: 1px solid #6c757d;
+}
+.border1
+{
+    border-bottom: 1px solid #6c757d;
+}
+#holdList
+{
+    height: 350px;
+    overflow-y: auto;
+}
+thead
+{
+    background-color: #202020;
+}
+th
+{
+    border:1px solid white;
+    color:white;
+}
+td
+{
+    border: 1px solid;
+}
+.card.pays {
+    background: #5d87ff;
+}
+.card-invoice-details
+{
+    /* border: 1px solid #5D87FF; */
+    height: 36vh;
+    background-color:#f5f5f5b9;
+    overflow-y: auto;
+    overflow-x: hidden;
+    transition: all 1s;
+}
+.border-custom-bottom {
+    border-bottom: 1px solid;
+}
+.pays .table,
+.pays .table td
+{
+    border: none;
+    color:white !important;
+}
+div#paymentMethods {
+    max-height: 350px;
+    overflow-y: auto;
+    padding-top: 10px ;
+    padding-bottom: 10px ;
+}
+.select2-container--default .select2-selection--single:focus,
+.select2-container--default .select2-selection--single.select2-selection--focus,
+.select2-selection:focus .select2 {
+    border:1px solid red !important;
+    border-color: red !important;
+}
+.select2:focus,
+input:focus,
+.select2-container--default .select2-selection--single:focus
+{
+    border-color: #ff0000 !important; /* Change this to your desired border color */
+    outline: none !important; /* Optional: Removes the default focus outline */
+}
+.btn-danger:focus
+{
+    border: 3px solid #5D87FF !important;
+}
+span.select2-dropdown.select2-dropdown--below {
+margin-top: -13px;
+}
+.product:focus .product-card,
+.increase-qty:focus,
+.decrease-qty:focus,
+.Item_name:focus
+{
+    border:1px solid #ff0000 !important;
+}
+
+.select2-container--default{
+    padding: 8px 16px;
+    font-size: 0.875rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #5A6A85;
+    background-color: transparent;
+    background-clip: padding-box;
+    border: 1px solid #DFE5EF;
+    appearance: none;
+    border-radius: 7px;
+}
+.focused-border {
+    border:1px solid red !important;
+    border-color: red !important;
+}
+.payBtn
+{
+    position: absolute;
+    bottom: 10px;
+}
+#HoldListModal .modal-dialog .modal-content .modal-body .table-responsive {
+    height: 300px;
+    overflow-y: auto;
+}
+#HoldInvoiceItems td {
+    border: none;
+    text-align: center;
+    padding: 10px !important;
+}
+#paymentMethods .col-md-12 {
+    height: 110px;
+}
+.pays
+{
+    background-color: #0173BC;
+}
+.closeTable td
+{
+    border: none;
+}
+.pays .table td
+{
+    padding: 15px !important;
+}
+.custom-font-size {
+    font-size: 15px;
+}
+.invoice-foot-items
+{
+    font-size: 12px;
+    font-weight: 600;
+}
+.toast-success
+{
+    background-color: #13deb9 !important;
+}
+.toast-error
+{
+    background-color: #ff0000 !important;
+}
+.batch
+{
+    font-size: 12px;
+    padding: 5px;
+    display: block;
+    width: 100%;
+    -moz-padding-start: 13px;
+    font-size: 0.875rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #5A6A85;
+    background-color: transparent;
+    /* background-image: var(--bs-form-select-bg-img), var(--bs-form-select-bg-icon, none); */
+    background-repeat: no-repeat;
+    background-position: right 16px center;
+    background-size: 16px 12px;
+    border: var(--bs-border-width) solid #DFE5EF;
+    border-radius: 7px;
+}
+a:not(.input-group-text):hover
+{
+    color: #5D87FF !important;
+    background-color: white !important;
+}
+.batch:focus,input:focus,select:focus
+{
+    border: 2px solid #5D87FF !important;
+}
+a.input-group-text:hover
+{
+    color: white !important;
+    background-color: #5D87FF !important;
+}
+.qty
+{
+    padding: 5px;
+}
+.p5
+{
+    padding: 5px;
+}
+.border-none
+{
+    border: none !important;
+}
+.card.product-card {
+    height: 100%;
+}
+.btn:focus
+{
+    border-color: red;
+}
+
+td #discounttype,
+td .discounttypeu
+{
+    --bs-form-select-bg-img: none !important;
+    /* padding: 2px !important; */
+}
+td .form-control,
+td .form-select
+{
+    font-size: 12px;
+}
+#headerCollapse2
+{
+    display: block !important;
+}
+#headerCollapse3
+{
+    display: none !important;
+}
+.body-wrapper
+{
+    margin-left: 0 !important;
+}
+
+.app-header
+{
+    width: 100% !important;
+}
+.pad-5
+{
+    padding: 2px !important;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+@media screen and (min-height: 1070px) {
+
+    .product-list 
+    {
+        height: 65.5vh;
+    }
+    .card-invoice-details 
+    {
+        height: 42vh;
+    }
+}
+.rotate {
+    animation: spin 1s linear infinite;
+}
+.rots {
+    font-size: 185px !important;
+    color: black;
+}
+
+td .input-group-text
+{
+    padding: 3px 6px;
+}
+#use_exccese
+{
+    display: none;
+}
+.loader {
+    height: 450px;
+    width: 100%;
+    display: grid ;
+    justify-content: center;
+    place-items: center;
+    position: absolute;
+    z-index: 10000000;
+}
+.f12
+{
+    font-size: 10px !important;
+}
+.table td,
+.table th
+{
+    padding: 1px !important;
+}
+.table th
+{
+    text-align: center;
+}
+.f10
+{
+    font-size: 10px;
+}
+

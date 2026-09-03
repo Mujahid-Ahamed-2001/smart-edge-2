@@ -1,0 +1,517 @@
+.page-header{
+    margin-bottom:35px;
+}
+
+.page-title{
+    font-size:34px;
+    font-weight:700;
+    color:#1E293B;
+    margin:0;
+    line-height:1.2;
+    letter-spacing:-0.5px;
+}
+
+.page-breadcrumb{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-top:10px;
+    font-size:14px;
+}
+
+.page-breadcrumb a{
+    text-decoration:none;
+    color:#94A3B8;
+    font-weight:500;
+    transition:.25s;
+}
+
+.page-breadcrumb a:hover{
+    color:#4F46E5;
+}
+
+.page-breadcrumb .separator{
+    color:#CBD5E1;
+    display:flex;
+    align-items:center;
+    font-size:14px;
+}
+
+.page-breadcrumb .active{
+    color:#64748B;
+    font-weight:600;
+}
+
+
+/*==================================================
+ Accordion
+==================================================*/
+
+.filter-accordion .accordion-item{
+
+    border:none;
+    border-radius:18px;
+    overflow:hidden;
+
+    background:#fff;
+
+    box-shadow:0 8px 30px rgba(15,23,42,.06);
+
+}
+
+.filter-accordion .accordion-button{
+
+    background:#fff;
+    padding:22px 25px;
+
+    box-shadow:none;
+
+}
+
+.filter-accordion .accordion-button:not(.collapsed){
+
+    background:#fff;
+    color:inherit;
+
+}
+
+.filter-accordion .accordion-button:focus{
+
+    box-shadow:none;
+
+}
+
+.filter-accordion .accordion-button::after{
+
+    background-size:18px;
+
+}
+
+/*==================================
+ Heading
+==================================*/
+
+.filter-heading{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:15px;
+
+}
+
+.filter-icon{
+
+    width:48px;
+
+    height:48px;
+
+    border-radius:14px;
+
+    background:#EEF2FF;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+}
+
+.filter-icon i{
+
+    font-size:22px;
+
+    color:#4F46E5;
+
+}
+
+.filter-heading h5{
+
+    font-weight:700;
+
+    color:#1E293B;
+
+}
+
+.filter-heading small{
+
+    color:#94A3B8;
+
+}
+
+/*==================================
+ Body
+==================================*/
+
+.filter-accordion .accordion-body{
+
+    padding:30px;
+
+}
+
+/*==================================
+ Inputs
+==================================*/
+
+.modern-input{
+
+    border:1px solid #E2E8F0;
+
+    border-radius:12px;
+
+    overflow:hidden;
+
+}
+
+.modern-input:focus-within{
+
+    border-color:#4F46E5;
+
+    box-shadow:0 0 0 3px rgba(79,70,229,.10);
+
+}
+
+.modern-input .input-group-text{
+
+    background:#F8FAFC;
+
+    border:none;
+
+    width:52px;
+
+    justify-content:center;
+
+    color:#64748B;
+
+}
+
+.modern-input .form-control,
+.modern-input .form-select{
+
+    border:none;
+
+    height:50px;
+
+    box-shadow:none;
+
+}
+
+.operator{
+
+    width:70px;
+
+    border:none;
+
+    border-left:1px solid #E2E8F0;
+
+    outline:none;
+
+    background:#fff;
+
+}
+
+/*==================================
+ Labels
+==================================*/
+
+.form-label{
+
+    font-weight:600;
+
+    color:#334155;
+
+    margin-bottom:10px;
+
+}
+
+/*==================================
+ Switch
+==================================*/
+
+.form-check-input{
+
+    width:50px;
+
+    height:25px;
+
+    cursor:pointer;
+
+}
+
+.form-check-input:checked{
+
+    background-color:#4F46E5;
+
+    border-color:#4F46E5;
+
+}
+
+/*==================================
+ Buttons
+==================================*/
+
+.btn{
+
+    border-radius:10px;
+
+    padding:10px 22px;
+
+    font-weight:600;
+
+}
+
+
+.customer-card{
+
+    border-radius:18px;
+
+    overflow:hidden;
+
+}
+
+.customer-card-header{
+
+    background:#fff;
+
+    padding:22px 30px;
+
+    border-bottom:1px solid #edf2f7;
+
+}
+
+.customer-card-header h4{
+
+    font-weight:700;
+
+    color:#1e293b;
+
+}
+
+.customer-card-header p{
+
+    color:#94a3b8;
+
+    font-size:14px;
+
+}
+
+.refresh-btn{
+
+    width:42px;
+
+    height:42px;
+
+    border-radius:12px;
+
+    border:1px solid #e2e8f0;
+
+}
+
+.refresh-btn:hover{
+
+    background:#4f46e5;
+
+    color:#fff;
+
+}
+
+.add-btn{
+
+    border-radius:12px;
+
+    padding:10px 24px;
+
+    font-weight:600;
+
+}
+
+.customer-table{
+
+    margin:0;
+
+}
+
+.customer-table thead{
+
+    background:#f8fafc;
+
+}
+
+.customer-table th{
+
+    font-size:13px;
+
+    font-weight:700;
+
+    color:#64748b;
+
+    padding:18px;
+
+    border:none;
+
+}
+
+.customer-table td{
+
+    padding:18px;
+
+    border-top:1px solid #f1f5f9;
+
+    color:#334155;
+
+}
+
+.customer-table tbody tr{
+
+    transition:.25s;
+
+}
+
+.customer-table tbody tr:hover{
+
+    background:#f8fbff;
+
+}
+
+.customer-info{
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    max-width: 320px;
+
+}
+.customer-info > div:last-child {
+    flex: 1;
+    min-width: 0; /* Required for ellipsis inside flex */
+}
+
+.ellipsis {
+    display: block;
+    width: 100%;
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.avatar{
+
+    width:46px;
+
+    height:46px;
+
+    border-radius:50%;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    color:#fff;
+
+    font-weight:700;
+
+    transition: all .5s;
+
+}
+
+.customer-info h6{
+
+    margin:0;
+
+    font-weight:600;
+
+}
+
+.customer-info span{
+
+    color:#94a3b8;
+
+    font-size:13px;
+
+}
+
+.badge{
+
+    padding:8px 15px;
+
+    border-radius:30px;
+
+    font-weight:600;
+    cursor: pointer;
+    transition: all .5s;
+
+}
+
+.badge-active{
+
+    background:#dcfce7;
+
+    color:#15803d;
+
+}
+
+.badge-inactive{
+
+    background:#fee2e2;
+
+    color:#dc2626;
+
+}
+
+.action-btns{
+    display:flex;
+    gap:8px;
+    align-items:center;
+}
+
+.action-btns button,
+.action-btns a{
+    width:38px;
+    height:38px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:0;
+    margin:0;
+    border:none;
+    border-radius:10px;
+    background:#f8fafc;
+    text-decoration:none;
+    color:#334155;
+    cursor:pointer;
+    transition:.25s;
+    box-sizing:border-box;
+    line-height:1;
+}
+
+.action-btns i{
+    font-size:18px;
+    line-height:1;
+}
+
+.action-btns button:hover,
+.action-btns a:hover{
+    background:#4f46e5;
+    color:#fff !important;
+    transform:scale(1.05);
+}
+
+.action-btns .delete:hover{
+    background:#ef4444;
+    transform:scale(1.05);
+}
+a:disabled,
+button:disabled{
+    cursor: not-allowed;
+    opacity: .5;
+}
+
+.customer-table tbody tr:last-child td{
+
+    border-bottom:none;
+
+}

@@ -1,0 +1,107 @@
+<div class="option" id="option-1" data-option-no="1">
+                                            <div class="d-flex justify-between m-3">
+                                                <div class="w-50">
+                                                    <h5 class="title"><strong>Option 1</strong></h5>    
+                                                </div>
+                                                <div class="w-50">
+                                                    <div class="d-flex justify-content-end w-100" id="action">
+                                                        <a href="javascript:void(0);" class="btn btn-primary me-2 add_option" id="add_option"><i class="ti ti-plus"></i> Option</a>
+                                                        <a href="javascript:void(0);" class="btn btn-danger delete_option" id="delete_option" data-option-no="1"><i class="ti ti-trash-x"> Option</i></a> 
+                                                    </div>
+                                                       
+                                                </div>
+                                            </div>
+                                            <div class="table-responsive">
+                                                <table class="table">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Item Information</th>
+                                                            <th>Item Description</th>
+                                                            <th style="text-align:center;">Qty</th>
+                                                            <th style="text-align:center;">Rate</th>
+                                                            <th style="text-align:center;">Cost</th>
+                                                            <th style="text-align:center;">Disc. Type</th>
+                                                            <th style="text-align:center;">Disc. (Per Unit)</th>
+                                                            <th style="text-align:center;">Total <span class="text-danger">*</span></th>
+                                                            <th style="text-align:center;"><a href="javascript:void(0);" class="btn btn-primary me-2" id="btn_add"><i class="ti ti-plus"></i> Row</a></th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody id="tbl_item">
+                                                        <tr>
+                                                            <td style="min-width:250px;">
+                                                                <select name="item_id[]" class="item form-select">
+                                                                    <option value=""></option>
+                                                                </select>
+                                                            </td>
+                                                            <td style="min-width:350px;">
+                                                                <textarea name="desc" id="" cols="20" class="form-control"></textarea>
+                                                            </td>
+                                                            <td style="max-width:100px;">
+                                                                <input type="number" name="" id="" class="form-control" step="0.01">
+                                                            </td>
+                                                            <td style="max-width:100px;">
+                                                                <input type="number" name="" id="" class="form-control" step="0.01">
+                                                            </td>
+                                                            <td style="max-width:100px;">
+                                                                <input type="number" name="" id="" class="form-control" step="0.01">
+                                                            </td>
+                                                            <td style="max-width:100px;">
+                                                                <select name="" id="discType" class="form-select">
+                                                                    <option value="1">%</option>
+                                                                    <option value="2">Flat</option>
+                                                                </select>
+                                                            </td>
+                                                            <td style="max-width:150px;">
+                                                                <input type="number" name="" id="" class="form-control" step="0.01">
+                                                            </td>
+                                                            <td style="max-width:100px;">
+                                                                <input type="number" name="" id="" class="form-control" step="0.01">
+                                                            </td>
+                                                            <td>
+                                                                <div class="d-flex justify-content-end" id="action">
+                                                                    <a href="javascript:void(0);" class="btn btn-warning me-2" id="btn_add"><i class="ti ti-copy"></i> Row</a>
+                                                                    <a href="javascript:void(0);" class="btn btn-danger" id="btn_delete"><i class="ti ti-trash-x"></i> Row</a>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                    <tfoot>
+                                                        <tr>
+                                                            <td colspan="7" class="text-end"><b>Sub Total</b></td>
+                                                            <td><input type="number" name="" id="sub_total" class="form-control" step="0.01" readonly></td>
+                                                            <td></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td colspan="7" class="text-end"><b>Sale Discount Type</b></td>
+                                                            <td>
+                                                                <select name="sale_discount_type" id="sale_discount_type" class="form-select">
+                                                                    <option value="1">%</option>
+                                                                    <option value="2">Flat</option>
+                                                                </select>
+                                                            </td>
+                                                            <td></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td colspan="7" class="text-end"><b>Sale Discount</b></td>
+                                                            <td><input type="number" name="" id="sale_discount_amount" class="form-control" step="0.01" readonly></td>
+                                                            <td></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td colspan="7" class="text-end"><b>Total Discount</b></td>
+                                                            <td><input type="number" name="" id="total_discount" class="form-control" step="0.01" readonly></td>
+                                                            <td></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td colspan="7" class="text-end"><b>Other Charges</b></td>
+                                                            <td><input type="number" name="other_charges" id="other_charges" class="form-control" step="0.01"></td>
+                                                            <td></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td colspan="7" class="text-end"><b>Grand Total</b></td>
+                                                            <td><input type="number" name="" id="grand_total" class="form-control" step="0.01" readonly></td>
+                                                            <td></td>
+                                                        </tr>
+                                                    </tfoot>
+                                                </table>
+                                            </div>    
+                                        </div>

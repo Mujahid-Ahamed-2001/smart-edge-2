@@ -1,0 +1,21 @@
+INSERT INTO `company` (`CMID`, `CompanyNo`, `ComName`, `CompanyLocation`, `LicenceNo`, `VersionNo`, `ComLogo`, `ComStartDate`, `ComExpireDate`, `ComStat`, `is_multicategory`, `is_commonStock`, `CompanyType_CTID`, `last_updateDate`) VALUES (NULL, 'CM-00001', 'Next Edge Solutions', 'Panadura', '00001', '1.1', NULL, '2026-04-17', NULL, '1', '0', '0', '1', current_timestamp());
+
+INSERT INTO `customers` (`CTID`, `CustomerNo`, `CustName`, `CustGender`, `CustDOB`, `CustAddress`, `CustContact`, `MaxCreditAmount`, `PaymentTerm`, `CustStat`, `shop_SHID`) VALUES (NULL, 'CU-00001', 'Common Customer', '1', NULL, 'Panadura', '0712345678', '100000.00', NULL, '1', '1');
+
+INSERT INTO `docno` (`DNID`, `tmp_no`, `org_no`, `ws_no`, `q_no`, `shop_id`) VALUES (NULL, '0', '0', '0', '0', '1');
+
+INSERT INTO `shop` (`SHID`, `ShopNo`, `ShopName`, `ShopLogo`, `ReceiptLogo`, `WholesaleShop`, `RetailShop`, `is_inventory`, `is_minus`, `is_category`, `is_expire`, `is_variation`, `is_suppliers`, `is_service`, `is_salesman`, `is_expenses`, `is_customers`, `is_fixedprice`, `is_carton`, `is_warranty`, `is_promotions`, `is_secondlan`, `is_labelprice`, `is_quotation`, `is_racks`, `is_credit`, `invoice_print`, `is_prescription`, `is_counter`, `is_excessAmount`, `is_BatchNo`, `is_under_cost`, `is_prodDes`, `ShopStat`, `Company_CMID`, `StockTypes_STID`, `AddressLineOne`, `AddressLineTwo`, `City`, `emailAddress`, `PhoneNumber`) VALUES (NULL, 'SH-00001', 'Next Edge Solutions', NULL, NULL, '0', '1', '1', '1', '1', '0', '0', '1', '1', '1', '1', '1', '0', '0', '1', '0', '0', '0', '1', '0', '0', '1', '0', '0', '0', '0', '0', '1', '1', '1', '1', '127, Wattalpola,', 'Panadura', 'Panadura', 'sales@next-edge.lk', '0770206960');
+
+INSERT INTO `categories` (`CTID`, `CategoryNo`, `CategoryName`, `shop_SHID`, `default`) VALUES (NULL, 'MC_000001', 'Main Default', '1', '1');
+
+INSERT INTO `subcategories` (`SCID`, `SubCatNo`, `SubCatName`, `categories_CTID`, `default`) VALUES (NULL, 'SC_000001', 'Sub Default', '1', '1');
+
+INSERT INTO `suppliers` (`SPID`, `SupplierNo`, `Distributer`, `SupplierName`, `Contact`, `SupplierStat`, `shop_SHID`) VALUES (NULL, 'SP-00001', 'Next Edge', 'Default Supplier', '0712345678', '1', '1');
+
+INSERT INTO `units` (`UNID`, `UnitName`, `ShortName`, `shop_SHID`) VALUES (NULL, 'Pieces', 'Pcs', '1');
+
+INSERT INTO `user` (`USID`, `UserProfile`, `UserName`, `UserEmail`, `ContactNo`, `UserPwd`, `PwdChange`, `UserStat`, `UserRoles_URID`, `UserType`, `paylimit`) VALUES (NULL, NULL, 'Admin', 'admin@next-edge.lk', '0770206960', '63afea2fba5359682f704b79640cb803', NULL, '1', '1', '1', '0.00');
+
+INSERT INTO `userroles` (`URID`, `UserRoleName`, `ur_status`, `added_by`, `user_ip`) VALUES (NULL, 'Admin', '1', '1', NULL);
+
+INSERT INTO `quote_stat` (`QSID`, `color`, `bg_color`, `stat_name`, `def`) VALUES ('1', '#000', '#FFFF00', 'Pending', '1'), ('2', '#000', '#39ff14', 'Accepted', '1');

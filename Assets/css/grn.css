@@ -1,0 +1,204 @@
+/*==================================================
+ Accordion
+==================================================*/
+
+.filter-accordion .accordion-item{
+
+    border:none;
+    border-radius:18px;
+    overflow:hidden;
+
+    background:#fff;
+
+    box-shadow:0 8px 30px rgba(15,23,42,.06);
+
+}
+
+.filter-accordion .accordion-button{
+
+    background:#fff;
+    padding:22px 25px;
+
+    box-shadow:none;
+
+}
+
+.filter-accordion .accordion-button:not(.collapsed){
+
+    background:#fff;
+    color:inherit;
+
+}
+
+.filter-accordion .accordion-button:focus{
+
+    box-shadow:none;
+
+}
+
+.filter-accordion .accordion-button::after{
+
+    background-size:18px;
+
+}
+
+/*==================================
+ Heading
+==================================*/
+
+.filter-heading{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:15px;
+
+}
+
+.filter-icon{
+
+    width:48px;
+
+    height:48px;
+
+    border-radius:14px;
+
+    background:#EEF2FF;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+}
+
+.filter-icon i{
+
+    font-size:22px;
+
+    color:#4F46E5;
+
+}
+
+.filter-heading h5{
+
+    font-weight:700;
+
+    color:#1E293B;
+
+}
+
+.filter-heading small{
+
+    color:#94A3B8;
+
+}
+
+/*==================================
+ Body
+==================================*/
+
+.filter-accordion .accordion-body{
+
+    padding:30px;
+
+}
+
+/*==================================
+ Inputs
+==================================*/
+
+.modern-input{
+
+    border:1px solid #E2E8F0;
+
+    border-radius:12px;
+
+    overflow:hidden;
+
+}
+
+.modern-input:focus-within{
+
+    border-color:#4F46E5;
+
+    box-shadow:0 0 0 3px rgba(79,70,229,.10);
+
+}
+
+.modern-input .input-group-text{
+
+    background:#F8FAFC;
+
+    border:none;
+
+    width:52px;
+
+    justify-content:center;
+
+    color:#64748B;
+
+}
+
+.modern-input .form-control,
+.modern-input .form-select{
+
+    border:none;
+
+    height:50px;
+
+    box-shadow:none;
+
+}
+
+.operator{
+
+    width:70px;
+
+    border:none;
+
+    border-left:1px solid #E2E8F0;
+
+    outline:none;
+
+    background:#fff;
+
+}
+
+/*==================================
+ Labels
+==================================*/
+
+.form-label{
+
+    font-weight:600;
+
+    color:#334155;
+
+    margin-bottom:10px;
+
+}
+
+/*==================================
+ Switch
+==================================*/
+
+.form-check-input{
+
+    width:50px;
+
+    height:25px;
+
+    cursor:pointer;
+
+}
+
+.form-check-input:checked{
+
+    background-color:#4F46E5;
+
+    border-color:#4F46E5;
+
+}
