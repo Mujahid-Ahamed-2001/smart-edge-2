@@ -2,11 +2,11 @@
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
-
+$title = isset($title) ? $title : "Smart Edge | Powered By Next Edge";
 ?>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Smart Edge | Powered By Next Edge</title>
+<title><?= $title ?></title>
 <link rel="shortcut icon" type="image/png" href="../Assets/Images/SystemLogo/favicon.png" />
 <link rel="stylesheet" href="../Assets/css/styles.min.css" />
 

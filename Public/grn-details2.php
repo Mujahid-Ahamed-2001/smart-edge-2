@@ -357,7 +357,7 @@ $shops=$GRNtObj->selectShop($userType,$user_id);
     
     <!-- footer Start  -->
     <?php include '../View/footer.php';?> 
-    <script src="../Assets/jquery/grn-details.js"></script>
+    <script src="../Assets/jquery/grn-details.js?v=1.2"></script>
     <!-- footer End  -->
 </body>
 </html>

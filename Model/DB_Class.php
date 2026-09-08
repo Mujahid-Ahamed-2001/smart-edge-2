@@ -16,6 +16,10 @@ class DBTransactions extends Dbh
             die("Error: Unable to read from table " . $e->getMessage());
         }   
     }
+    public function getSequence($num) 
+    {
+        return sprintf("%'.06d", $num);
+    }
     public function updateData( string $table, array $data, array $where ): int 
     {
         if (empty($data)) {
@@ -173,7 +177,7 @@ class DBTransactions extends Dbh
             * log the error, or return a JSON response.
             */
             throw new PDOException(
-                'Unable to insert data into the requested table.',
+                'Unable to insert data into '.$table.' .',
                 (int) $e->getCode(),
                 $e
             );

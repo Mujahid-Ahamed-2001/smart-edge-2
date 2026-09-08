@@ -291,7 +291,7 @@ $customerdata = $dbObj->getData($sql);
                                         <label>
                                             Invoice Discount
                                         </label>
-                                        <input type="text" name="invoice_discount" class="form-control footer-input" id="invoice_discount" onchange="grandTotal()" onkeyup="grandTotal()" onkeydown="grandTotal()" onkeypress="grandTotal()" placeholder="Invoice Discount">
+                                        <input type="text" name="invoice_discount" class="form-control footer-input" id="invoice_discount" onchange="grandTotal()" onkeyup="grandTotal()" onkeydown="grandTotal()" onkeypress="grandTotal()" placeholder="Invoice Discount" maxlength="3">
                                     </div>
 
                                 </div>

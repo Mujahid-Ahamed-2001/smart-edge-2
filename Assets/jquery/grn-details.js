@@ -545,6 +545,146 @@ function get_payment_methods() {
         return $.Deferred().reject(response).promise();
     });
 }
+async function get_supcheqs() {
+
+    const $paymentContainer = $('#payment_grid');
+
+    if (!GHID) {
+        toastr.error("Invalid GRN ID.", "Error");
+        return;
+    }
+
+    try {
+
+        const response = await $.ajax({
+            url: '../AJAX/GRN/getSupCheqs.php',
+            method: 'POST',
+            data: {
+                GHID: GHID
+            },
+            dataType: 'json'
+        });
+
+        console.log("Cheque Response:", response);
+
+        if (Number(response.status) !== 1) {
+            toastr.error(
+                response.message || "Unable to fetch cheques.",
+                "Error"
+            );
+            return;
+        }
+
+        const cheques = response.data || [];
+
+        console.log("Cheques:", cheques);
+
+        if (cheques.length === 0) {
+            return;
+        }
+
+        let chequeHTML = "";
+
+        cheques.forEach(function (cheque) {
+            chequeHTML += create_cheque_row(cheque);
+        });
+
+        // IMPORTANT: append, don't replace
+        $paymentContainer.append(chequeHTML);
+
+    } catch (error) {
+
+        console.error("Get supplier cheques error:", error);
+
+        toastr.error(
+            "An error occurred while fetching supplier cheques.",
+            "Error"
+        );
+    }
+
+    applyGRNDocumentLock();
+}
+function create_cheque_row(cheque) {
+
+    var SCQID = cheque.SCQID;
+    var SCDID = cheque.SCDID;
+    var chqNo = cheque.chqNo;
+    var bank = cheque.bank;
+    var chqAmount = cheque.chqAmount;
+    var chqDate = cheque.chqDate;
+    return `
+        
+                <div class="chequeDiv-${SCQID} col-md-12 mb-2 mt-2 row"
+                     data-scqid="${SCQID}"
+                     data-scdid="${SCDID}">
+
+                    <div class="col-md-2">
+                        <label class="form-label">Cheque No</label>
+
+                        <input type="text"
+                               name="chqNo[]"
+                               class="form-control chqNo"
+                               placeholder="Cheque No"
+                               data-scqid="${SCQID}"
+                               data-scdid="${SCDID}" value="${chqNo}">
+                    </div>
+
+                    <div class="col-md-2">
+                        <label class="form-label">Cheque Date</label>
+
+                        <input type="date"
+                               name="chqdate[]"
+                               class="form-control chqdate"
+                               data-scqid="${SCQID}"
+                               data-scdid="${SCDID}" value="${chqDate}">
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label">Bank</label>
+
+                        <input type="text"
+                               name="chqbank[]"
+                               class="form-control chqbank"
+                               placeholder="Ex: BOC"
+                               data-scqid="${SCQID}"
+                               data-scdid="${SCDID}" value="${bank}">
+                    </div>
+
+                    <div class="col-md-3">
+                        <label class="form-label">Cheque Amount</label>
+
+                        <input type="number"
+                               step="0.01"
+                               min="0"
+                               name="chqAmount[]"
+                               class="form-control chqamount"
+                               placeholder="Ex: 2000"
+                               data-scqid="${SCQID}"
+                               data-scdid="${SCDID}" value="${chqAmount}">
+                    </div>
+
+                    <div class="col-md-1">
+
+                        <a href="javascript:void(0);"
+                           class="remove-chq btn btn-danger mt-4"
+                           data-scqid="${SCQID}"
+                           data-scdid="${SCDID}">
+
+                            <i class="ti ti-trash"></i>
+                        </a>
+
+                        <a href="javascript:void(0);"
+                           class="btn btn-primary mt-4"
+                           onclick="addChq()">
+
+                            <i class="ti ti-plus"></i>
+                        </a>
+
+                    </div>
+
+                </div>
+    `;
+}
 async function get_payments() {
     const $paymentContainer = $('#payment_grid');
 
@@ -554,16 +694,6 @@ async function get_payments() {
     }
 
     try {
-        $paymentContainer.html(`
-            <div class="text-center py-4 payment-loading">
-                <div
-                    class="spinner-border spinner-border-sm text-primary"
-                    role="status"
-                ></div>
-
-                <span class="ms-2">Loading payments...</span>
-            </div>
-        `);
 
         /*
          * Load payments and payment methods simultaneously.
@@ -581,7 +711,6 @@ async function get_payments() {
             get_payment_methods()
         ]);
 
-        $paymentContainer.empty();
 
         if (Number(response.status) !== 1) {
             toastr.error(
@@ -594,12 +723,6 @@ async function get_payments() {
         const payments = response.data || [];
 
         if (payments.length === 0) {
-            $paymentContainer.html(`
-                <div class="alert alert-light text-center my-3">
-                    No payments have been added.
-                </div>
-            `);
-
             return;
         }
 
@@ -612,16 +735,11 @@ async function get_payments() {
             );
         });
 
-        $paymentContainer.html(paymentHTML);
+        $paymentContainer.append(paymentHTML);
 
     } catch (error) {
         console.error("Get payments error:", error);
 
-        $paymentContainer.html(`
-            <div class="alert alert-danger text-center my-3">
-                Unable to load the payment records.
-            </div>
-        `);
 
         toastr.error(
             "An error occurred while fetching GRN payments.",
@@ -904,7 +1022,7 @@ async function add_payment() {
 
 function delete_payment(TRID) {
     const $paymentRow = $('#payment-row-' + TRID);
-    const $deleteButton = $paymentRow.find('.remove-payment');
+    const $deleteButton = $paymentRow.find('.deletPayment');
 
     $deleteButton.prop('disabled', true);
 
@@ -957,6 +1075,135 @@ function delete_payment(TRID) {
             );
 
             $deleteButton.prop('disabled', false);
+        }
+    });
+}
+function delete_cheq(SCQID)
+{
+    const $chqRow  = $(document).find('.chequeDiv-' + SCQID);
+    if(confirm("Are you sure you want to delete this cheque?"))
+    {
+        return $.ajax({
+            url: '../AJAX/GRN/deletChq.php',
+            method: 'POST',
+            dataType: 'json',
+            data: {
+                SCQID: SCQID
+            },
+            success: function (response) {
+                if (Number(response.status) !== 1) {
+                    toastr.error(
+                        response.message || "Unable to delete cheque.",
+                        "Error"
+                    );
+
+                    return;
+                }
+                else
+                {
+                    toastr.success(
+                        response.message || "Cheque Deleted successfully.",
+                        "Success"
+                    );
+                    $chqRow.remove();
+
+                }
+
+            },
+
+            error: function (xhr, status, error) {
+                console.error("Update cheque AJAX error:", {
+                    status: status,
+                    error: error,
+                    response: xhr.responseText
+                });
+
+                toastr.error(
+                    "An error occurred while deleting the cheque.",
+                    "Error"
+                );
+            },
+
+            complete: function () {
+            }
+
+        })
+    }
+
+}
+function update_cheq(SCQID)
+{
+    const $chqRow  = $(document).find('.chequeDiv-' + SCQID);
+
+    const chqNo = $chqRow.find('.chqNo').val();
+    const chqdate = $chqRow.find('.chqdate').val();
+    const chqbank = $chqRow.find('.chqbank').val();
+    const chqamount = $chqRow.find('.chqamount').val();
+    
+    return $.ajax({
+        url: '../AJAX/GRN/updateChq.php',
+        method: 'POST',
+        dataType: 'json',
+
+        data: {
+            SCQID: SCQID,
+            chqNo: chqNo,
+            chqdate: chqdate,
+            chqbank: chqbank,
+            chqamount: chqamount
+        },
+
+        success: function (response) {
+            if (Number(response.status) !== 1) {
+                toastr.error(
+                    response.message || "Unable to update cheque.",
+                    "Error"
+                );
+
+                return;
+            }
+
+            /*
+             * Apply the formatted value returned by PHP.
+             */
+            if (response.data) {
+                $chqRow
+                    .find('.chqNo')
+                    .val(response.data.chqNo);
+
+                $chqRow
+                    .find('.chqdate')
+                    .val(response.data.chqDate);
+
+                $chqRow
+                    .find('.chqbank')
+                    .val(response.data.bank);
+                
+                $chqRow
+                    .find('.chqamount')
+                    .val(response.data.chqAmount);
+            }
+
+            toastr.success(
+                response.message || "Cheque updated.",
+                "Success"
+            );
+        },
+
+        error: function (xhr, status, error) {
+            console.error("Update cheque AJAX error:", {
+                status: status,
+                error: error,
+                response: xhr.responseText
+            });
+
+            toastr.error(
+                "An error occurred while updating the cheque.",
+                "Error"
+            );
+        },
+
+        complete: function () {
         }
     });
 }
@@ -1562,16 +1809,165 @@ function grandTotal()
         });
     
 }
+function addChq() {
+
+    return $.ajax({
+        url: '../AJAX/GRN/addsupchq.php',
+        method: 'POST',
+        data: {
+            GHID: GHID,
+            shop_SHID: $("#shopLocation").val(),
+            sup_SPID: $("#grnSupplier").val()
+        },
+        dataType: 'json',
+
+        success: function (response) {
+
+            if (response.error) {
+
+                if (Array.isArray(response.error)) {
+                    response.error.forEach(function (errorMsg) {
+                        toastr.error(errorMsg, "Error");
+                    });
+                } else {
+                    toastr.error(response.error, "Error");
+                }
+
+                return;
+            }
+
+            var SCQID = response.SCQID;
+            var SCDID = response.SCDID;
+
+            if (!SCQID || !SCDID) {
+                toastr.error("Invalid cheque data returned from server.", "Error");
+                return;
+            }
+
+            var payment = `
+                <div class="chequeDiv-${SCQID} col-md-12 mb-2 mt-2 row"
+                     data-scqid="${SCQID}"
+                     data-scdid="${SCDID}">
+
+                    <div class="col-md-2">
+                        <label class="form-label">Cheque No</label>
+
+                        <input type="text"
+                               name="chqNo[]"
+                               class="form-control chqNo"
+                               placeholder="Cheque No"
+                               data-scqid="${SCQID}"
+                               data-scdid="${SCDID}">
+                    </div>
+
+                    <div class="col-md-2">
+                        <label class="form-label">Cheque Date</label>
+
+                        <input type="date"
+                               name="chqdate[]"
+                               class="form-control chqdate"
+                               data-scqid="${SCQID}"
+                               data-scdid="${SCDID}">
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label">Bank</label>
+
+                        <input type="text"
+                               name="chqbank[]"
+                               class="form-control chqbank"
+                               placeholder="Ex: BOC"
+                               data-scqid="${SCQID}"
+                               data-scdid="${SCDID}">
+                    </div>
+
+                    <div class="col-md-3">
+                        <label class="form-label">Cheque Amount</label>
+
+                        <input type="number"
+                               step="0.01"
+                               min="0"
+                               name="chqAmount[]"
+                               class="form-control chqamount"
+                               placeholder="Ex: 2000"
+                               data-scqid="${SCQID}"
+                               data-scdid="${SCDID}">
+                    </div>
+
+                    <div class="col-md-1">
+
+                        <a href="javascript:void(0);"
+                           class="remove-chq btn btn-danger mt-4"
+                           data-scqid="${SCQID}"
+                           data-scdid="${SCDID}">
+
+                            <i class="ti ti-trash"></i>
+                        </a>
+
+                        <a href="javascript:void(0);"
+                           class="btn btn-primary mt-4"
+                           onclick="addChq()">
+
+                            <i class="ti ti-plus"></i>
+                        </a>
+
+                    </div>
+
+                </div>
+            `;
+
+            $('#payment_grid').append(payment);
+        },
+
+        error: function (xhr, status, error) {
+
+            console.log("AJAX Error:", error);
+            console.log("Server Response:", xhr.responseText);
+
+            toastr.error(
+                "An error occurred while adding the cheque.",
+                "Error"
+            );
+        }
+    });
+}
 $(document).ready(function(){
     $("#expenseDiv").hide();
+    $(document).on("change", ".payment-method", function(){
+        var val = $(this).val();
+        if(val=="5")
+        {
+            addChq();
+        }
+    })
     $("#paymentDiv").removeClass("col-md-6").addClass("col-md-12");
     if (GHID) {
         get_payments();
+        get_supcheqs();
     }
     $(document).on( 'change', '.payment-date, .payment-method', function () 
         {
             const TRID = $(this).data('transaction-id');
             update_payment(TRID);
+        }
+    );
+    $(document).on( 'change', '.chqNo, .chqdate, .chqbank, .chqamount', function () 
+        {
+            const SCQID = $(this).data('scqid');
+            setTimeout(() => {
+                update_cheq(SCQID);    
+            }, 500);
+            
+        }
+    );
+    $(document).on( 'click', '.remove-chq', function (e) 
+        {
+            e.preventDefault();
+            const SCQID = $(this).data('scqid');
+            setTimeout(() => {
+                delete_cheq(SCQID);    
+            }, 500);
+            
         }
     );
     $(document).on('click', '.deletPayment', function (e) {
