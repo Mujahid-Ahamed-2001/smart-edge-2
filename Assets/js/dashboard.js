@@ -618,17 +618,21 @@ $(function () {
 
   var today = new Date();
 
-  var firstDay = new Date(
-      today.getFullYear(),
-      today.getMonth(),
-      1
-  ).toISOString().split('T')[0];
+var firstDay =
+    today.getFullYear() + "-" +
+    String(today.getMonth() + 1).padStart(2, "0") +
+    "-01";
 
-  var lastDay = new Date(
-      today.getFullYear(),
-      today.getMonth() + 1,
-      0
-  ).toISOString().split('T')[0];
+var lastDate = new Date(
+    today.getFullYear(),
+    today.getMonth() + 1,
+    0
+);
+
+var lastDay =
+    lastDate.getFullYear() + "-" +
+    String(lastDate.getMonth() + 1).padStart(2, "0") + "-" +
+    String(lastDate.getDate()).padStart(2, "0");
 
   getSales(firstDay, lastDay);
   getTopSellingProducts(firstDay, lastDay);

@@ -55,6 +55,8 @@ LEFT JOIN
     FROM expenses
     WHERE shop_SHID = ?
         AND EffectiveDate BETWEEN ? AND ?
+        AND status=1 
+        AND is_deleted!=1
     GROUP BY EffectiveDate
 ) e ON d.date = e.EffectiveDate
 

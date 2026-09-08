@@ -19,435 +19,642 @@ function TableLoading($table, TableName = "Data") {
     `;
     $table.find('tbody').html(loaderHtml);
 }
-function fetchpnlData()
+function TableLoading2($table,TableName = "", loading="Loading ", dot="...")
 {
+    let loaderHtml = `<div class="d-flex flex-column justify-content-center align-items-center text-center" style="min-height: 50px;">
+        <div class="spinner-border text-primary" role="status"></div>
+        <div class="mt-2 fw-semibold">${loading+" "+TableName+dot}</div>
+    </div>`;
+    $table.html(loaderHtml);
+}
+function getCommon(startDate = "", endDate = "") {
+
+    if (!startDate) {
+        const now = new Date();
+
+        startDate =
+            now.getFullYear() + "-" +
+            String(now.getMonth() + 1).padStart(2, "0") +
+            "-01";
+    }
+
+    if (!endDate) {
+        const now = new Date();
+
+        const lastDay = new Date(
+            now.getFullYear(),
+            now.getMonth() + 1,
+            0
+        );
+
+        endDate =
+            lastDay.getFullYear() + "-" +
+            String(lastDay.getMonth() + 1).padStart(2, "0") + "-" +
+            String(lastDay.getDate()).padStart(2, "0");
+    }
+
     return $.ajax({
-        url: '../AJAX/Expense/fetchExpenseData.php',
-        method: 'post',
-        data: { ShopID: ShopID },
+        url: '../AJAX/PNL/getCommon.php',
+        method: 'POST',
         dataType: 'json',
+
+        data: {
+            start: startDate,
+            end: endDate
+        },
+
         beforeSend: function() {
-            TableLoading($table, "pnls");
+            TableLoading2($('.getCommon'),"","","");
         },
+
         success: function(response) {
-            if ($.fn.DataTable.isDataTable($table)) {
-                $table.DataTable().clear().destroy();
-            }
-            // Clear previous data (including loader)
-            $table.find('tbody').html("");
-            var headcount = $table.find('thead th').length
-            if (!response || response.length === 0) {
-                $table.find('tbody').html(`
-                    <tr>
-                        <td colspan="${headcount}" class="text-center py-5">No pnl data available.</td>
-                    </tr>
-                `);
-                return;
-            }
-            $.each(response, function (index, row) {
-                var sl = row.sl;
-                var EPID = row.EPID; 
-                var EffectiveDate = row.EffectiveDate;
-                var pnlReason = row.pnlReason;
-                var pnl_cat = row.pnl_cat;
-                var is_default = row.is_default;
-                var status = row.status;
-                var created_date = row.created_date;
-                var Created_by = row.Created_by;
-                var ModifiedBy = row.ModifiedBy;
-                var modified_date = row.modified_date;
-                var badge =``;
-                var status_badge =``;
-                if(is_default ==1)
-                {
-                    badge=`<span class="badge badge-success default_badge" data-epid="${EPID}" data-is_default="${is_default}">
-                                <i class="ti ti-check"></i>
-                                Default
-                            </span>`;
-                }
-                else
-                {
-                    badge=`<span class="badge badge-warning default_badge" data-epid="${EPID}" data-is_default="${is_default}">
-                                <i class="ti ti-alert-circle"></i>
-                                Not Default
-                            </span>`;
-                }
-                if(status ==1)
-                {
-                    status_badge=`<span class="badge badge-success status_badge" data-epid="${EPID}">
-                                <i class="ti ti-check"></i>
-                                Active
-                            </span>`;
-                }
-                else
-                {
-                    status_badge=`<span class="badge badge-warning status_badge" data-epid="${EPID}">
-                                <i class="ti ti-alert-circle"></i>
-                                Inactive
-                            </span>`;
-                }
-                var btn =``;
-                if(edit_access==1)
-                {
-                    btn=`<a class="btn-action btn-edit open-modal" data-epid="${EPID}" href="../View/modals/pnls.php?condition=edit&ref=Addpnl&EPID=${EPID}" data-title="Edit pnl Category">
-                                <i class="ti ti-edit"></i>
-                            </a>`;
-                }
-                if(delete_access==1)
-                {
-                    btn +=`<button class="btn-action btn-delete delete-epid" data-epid="${EPID}">
-                                <i class="ti ti-trash"></i>
-                            </button>`;
-                }
-                $table.find('tbody').append(`
-                    <tr data-epid="${EPID}">
-                        <td>${sl}</td>
-                        <td>
-                            <div class="pnl-name">
-                                <div class="pnl-color"></div>
-                                ${pnlReason}
-                            </div>
-                        </td>
-                        <td>
-                            ${pnl_cat}
-                        </td>
-                        <td>
-                            ${EffectiveDate}
-                        </td>
-                        <td>
-                            ${status_badge}
-                        </td>
-                        <td>
-                            ${badge}
-                        </td>
-                        <td>
-                            ${Created_by}
-                        </td>
-                        <td>
-                            ${created_date}
-                        </td>
-                        <td>
-                            ${ModifiedBy}
-                        </td>
-                        <td>
-                            ${modified_date}
-                        </td>
-                        <td>
-                            ${btn}
-                        </td>
-                    </tr>
-                `);
-            });
-            let table = $table.DataTable({           
-                                paging: true,
-                                lengthChange: true,
-                                searching: true,
-                                pageLength: 10
-                            });
-            exportTableButtons('tbl_pnls');
+
+            setTimeout(() => {
+                $("#totRevenue").html("Rs. "+response.totalRevenue);
+                    $("#totCost").html("Rs. "+response.totalCost);
+                    $("#grossProfit").html("Rs. "+response.grossProfit);
+                    $("#netProfit").html("Rs. "+response.netProfit);
+            }, 1200);
+
         },
+
         error: function(xhr, status, error) {
             console.log("AJAX Error:", status, error);
             console.log("Response:", xhr.responseText);
-            toastr.error("An error occurred while processing.", "Error");
+
+            toastr.error(
+                "An error occurred while processing common data.",
+                "Error"
+            );
         }
     });
 }
-$(function () {
-    /*==================================================
-    Sample pnl overview data
-    Later, replace this object with your AJAX response.
-    ==================================================*/
-    const pnlOverviewData = {
-        labels: [
-            "Rent",
-            "Salaries",
-            "Utilities",
-            "Office Supplies",
-            "Marketing",
-            "Transportation",
-            "Others"
-        ],
-        values: [
-            150000,
-            120000,
-            65000,
-            45500,
-            38750,
-            28250,
-            37250
-        ],
-        colors: [
-            "#5F3DE8",
-            "#446ED1",
-            "#72B3A7",
-            "#F4A11A",
-            "#648BEA",
-            "#ED6EB2",
-            "#C8C7DF"
-        ]
-    };
-    const overviewTotal = pnlOverviewData.values.reduce(
-        function (total, value) {
-            return total + value;
+
+let pnlTrendChart = null;
+
+function getPnLTrend(startDate = "", endDate = "") {
+
+    /*
+     * Default start date:
+     * First day of current month
+     */
+    if (!startDate) {
+
+        const now = new Date();
+
+        startDate =
+            now.getFullYear() + "-" +
+            String(now.getMonth() + 1).padStart(2, "0") +
+            "-01";
+    }
+
+
+    /*
+     * Default end date:
+     * Last day of current month
+     */
+    if (!endDate) {
+
+        const now = new Date();
+
+        const lastDay = new Date(
+            now.getFullYear(),
+            now.getMonth() + 1,
+            0
+        );
+
+        endDate =
+            lastDay.getFullYear() + "-" +
+            String(lastDay.getMonth() + 1).padStart(2, "0") + "-" +
+            String(lastDay.getDate()).padStart(2, "0");
+    }
+
+
+    return $.ajax({
+
+        url: '../AJAX/PNL/getPnLTrend.php',
+
+        method: 'POST',
+
+        dataType: 'json',
+
+        data: {
+            start: startDate,
+            end: endDate
         },
-        0
-    );
-    $("#pnlOverviewTotal").text(
-        formatpnlCurrency(overviewTotal, 0)
-    );
-    createpnlLegend(pnlOverviewData, overviewTotal);
-    /*==================================================
-    pnls Donut Chart
-    ==================================================*/
-    const $overviewCanvas = $("#pnlOverviewChart");
-    if ($overviewCanvas.length) {
-        const overviewCanvas = $overviewCanvas[0];
-        new Chart(overviewCanvas, {
-            type: "doughnut",
-            data: {
-                labels: pnlOverviewData.labels,
-                datasets: [{
-                    data: pnlOverviewData.values,
-                    backgroundColor: pnlOverviewData.colors,
-                    borderColor: "#ffffff",
-                    borderWidth: 2,
-                    hoverBorderWidth: 2,
-                    hoverOffset: 5
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                cutout: "62%",
-                animation: {
-                    duration: 900,
-                    easing: "easeOutQuart"
-                },
-                plugins: {
-                    legend: {
-                        display: false
-                    },
-                    tooltip: {
-                        displayColors: true,
-                        backgroundColor: "#202638",
-                        titleColor: "#ffffff",
-                        bodyColor: "#ffffff",
-                        padding: 12,
-                        cornerRadius: 8,
-                        callbacks: {
-                            label: function (context) {
-                                const value = Number(context.raw || 0);
-                                const percentage = overviewTotal > 0
-                                    ? ((value / overviewTotal) * 100).toFixed(1)
-                                    : 0;
-                                return " " +
-                                    context.label +
-                                    ": " +
-                                    formatpnlCurrency(value, 2) +
-                                    " (" + percentage + "%)";
-                            }
-                        }
-                    }
-                }
+        beforeSend: function() {
+            TableLoading2($('#pnlTrendChart'),"","","");
+        },
+        success: function (response) {
+
+            if (!response.status) {
+
+                toastr.error(
+                    response.message ?? "Unable to load P&L trend."
+                );
+
+                return;
             }
-        });
-    }
-    /*==================================================
-    Sample pnls trend data
-    ==================================================*/
-    const pnlTrendData = {
-        labels: [
-            "May 01",
-            "May 03",
-            "May 05",
-            "May 07",
-            "May 09",
-            "May 11",
-            "May 13",
-            "May 15",
-            "May 17",
-            "May 19",
-            "May 21",
-            "May 23",
-            "May 25",
-            "May 27",
-            "May 29",
-            "May 31"
-        ],
-        values: [
-            25000,
-            45500,
-            28000,
-            30000,
-            24500,
-            40500,
-            35000,
-            54000,
-            52000,
-            72450,
-            62500,
-            58000,
-            61000,
-            56000,
-            64500,
-            79000
-        ]
-    };
-    /*==================================================
-    pnls Trend Chart
-    ==================================================*/
-    const $trendCanvas = $("#pnlTrendChart");
-    if ($trendCanvas.length) {
-        const trendCanvas = $trendCanvas[0];
-        const trendContext = trendCanvas.getContext("2d");
-        const trendGradient = trendContext.createLinearGradient(0, 0, 0, 280);
-        trendGradient.addColorStop(0, "rgba(103, 72, 246, 0.24)");
-        trendGradient.addColorStop(0.65, "rgba(103, 72, 246, 0.06)");
-        trendGradient.addColorStop(1, "rgba(103, 72, 246, 0)");
-        new Chart(trendCanvas, {
-            type: "line",
-            data: {
-                labels: pnlTrendData.labels,
-                datasets: [{
-                    label: "pnls",
-                    data: pnlTrendData.values,
-                    borderColor: "#6748F6",
-                    backgroundColor: trendGradient,
-                    borderWidth: 2.5,
-                    fill: true,
-                    tension: 0.4,
-                    pointRadius: 0,
-                    pointHoverRadius: 5,
-                    pointHoverBackgroundColor: "#ffffff",
-                    pointHoverBorderColor: "#6748F6",
-                    pointHoverBorderWidth: 2
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                interaction: {
-                    mode: "index",
-                    intersect: false
-                },
-                plugins: {
-                    legend: {
-                        display: false
-                    },
-                    tooltip: {
-                        backgroundColor: "#ffffff",
-                        titleColor: "#697386",
-                        bodyColor: "#252c3d",
-                        borderColor: "#e3e5ed",
-                        borderWidth: 1,
-                        padding: 12,
-                        cornerRadius: 8,
-                        displayColors: false,
-                        callbacks: {
-                            label: function (context) {
-                                return formatpnlCurrency(
-                                    Number(context.raw || 0),
-                                    2
-                                );
-                            }
+
+
+            const trend = response.trend;
+
+
+            /*
+             * Dates
+             */
+            const labels = trend.map(function (item) {
+
+                return item.date;
+
+            });
+
+
+            /*
+             * Net Profit / Loss
+             */
+            const netProfitData = trend.map(function (item) {
+
+                return parseFloat(item.netProfit);
+
+            });
+
+
+            const canvas = document.getElementById(
+                "pnlTrendChart"
+            );
+
+
+            if (!canvas) {
+                return;
+            }
+
+
+            /*
+             * Destroy existing chart before
+             * creating a new chart.
+             *
+             * Important when changing date ranges.
+             */
+            if (pnlTrendChart) {
+
+                pnlTrendChart.destroy();
+
+            }
+
+
+            /*
+             * Create Trend Chart
+             */
+            pnlTrendChart = new Chart(canvas, {
+
+                type: 'line',
+
+                data: {
+
+                    labels: labels,
+
+                    datasets: [
+
+                        {
+                            label: 'Net Profit / Loss',
+
+                            data: netProfitData,
+
+                            borderWidth: 2,
+
+                            tension: 0.35,
+
+                            fill: false,
+
+                            pointRadius: 4,
+
+                            pointHoverRadius: 6
                         }
-                    }
+
+                    ]
                 },
-                scales: {
-                    x: {
-                        border: {
-                            display: false
-                        },
-                        grid: {
-                            display: false
-                        },
-                        ticks: {
-                            color: "#7e889a",
-                            font: {
-                                size: 11
-                            },
-                            maxRotation: 0,
-                            callback: function (value, index) {
-                                return index % 3 === 0
-                                    ? this.getLabelForValue(value)
-                                    : "";
-                            }
-                        }
+
+
+                options: {
+
+                    responsive: true,
+
+                    maintainAspectRatio: false,
+
+
+                    interaction: {
+
+                        mode: 'index',
+
+                        intersect: false
+
                     },
-                    y: {
-                        beginAtZero: true,
-                        suggestedMax: 100000,
-                        border: {
-                            display: false
+
+
+                    plugins: {
+
+                        legend: {
+                            display: true
                         },
-                        grid: {
-                            color: "#edf0f5",
-                            drawTicks: false
-                        },
-                        ticks: {
-                            stepSize: 25000,
-                            padding: 10,
-                            color: "#7e889a",
-                            font: {
-                                size: 11
-                            },
-                            callback: function (value) {
-                                if (value === 0) {
-                                    return "0";
+
+
+                        tooltip: {
+
+                            callbacks: {
+
+                                label: function (context) {
+
+                                    const value =
+                                        context.parsed.y ?? 0;
+
+                                    if (value < 0) {
+
+                                        return "Loss: Rs. " +
+                                            Math.abs(value)
+                                                .toLocaleString(
+                                                    undefined,
+                                                    {
+                                                        minimumFractionDigits: 2,
+                                                        maximumFractionDigits: 2
+                                                    }
+                                                );
+                                    }
+
+
+                                    return "Profit: Rs. " +
+                                        value.toLocaleString(
+                                            undefined,
+                                            {
+                                                minimumFractionDigits: 2,
+                                                maximumFractionDigits: 2
+                                            }
+                                        );
                                 }
-                                return (value / 1000) + "K";
+                            }
+                        }
+                    },
+
+
+                    scales: {
+
+                        x: {
+
+                            grid: {
+                                display: false
+                            }
+
+                        },
+
+
+                        y: {
+
+                            beginAtZero: true,
+
+                            ticks: {
+
+                                callback: function (value) {
+
+                                    return "Rs. " +
+                                        Number(value)
+                                            .toLocaleString();
+
+                                }
                             }
                         }
                     }
                 }
-            }
-        });
-    }
-    /*==================================================
-    Generate custom overview legend
-    ==================================================*/
-    function createpnlLegend(data, total) {
-        const $legendContainer = $("#pnlChartLegend");
-        if (!$legendContainer.length) {
-            return;
+            });
+        },
+
+
+        error: function (xhr, status, error) {
+
+            console.log(
+                "P&L Trend AJAX Error:",
+                status,
+                error
+            );
+
+            console.log(
+                "Response:",
+                xhr.responseText
+            );
+
+            toastr.error(
+                "An error occurred while loading P&L trend.",
+                "Error"
+            );
         }
-        $legendContainer.empty();
-        $.each(data.labels, function (index, label) {
-            const value = Number(data.values[index] || 0);
-            const percentage = total > 0
-                ? ((value / total) * 100).toFixed(1)
-                : "0.0";
-            const $legendItem = $("<div>", {
-                class: "pnl-legend-item"
-            }).html(`
-                <span
-                    class="pnl-legend-color"
-                    style="background:${data.colors[index]}"
-                ></span>
-                <span class="pnl-legend-name">
-                    ${label}
-                </span>
-                <span class="pnl-legend-amount">
-                    ${formatpnlCurrency(value, 2)}
-                </span>
-                <span class="pnl-legend-percentage">
-                    ${percentage}%
-                </span>
-            `);
-            $legendContainer.append($legendItem);
-        });
+    });
+}
+function getPnLTable(startDate = "", endDate = "") {
+
+    // First day of current month
+    if (!startDate) {
+        const now = new Date();
+
+        startDate =
+            now.getFullYear() + "-" +
+            String(now.getMonth() + 1).padStart(2, "0") +
+            "-01";
     }
-    /*==================================================
-    Currency formatter
-    ==================================================*/
-    function formatpnlCurrency(amount, decimalPlaces = 2) {
-        return "Rs. " + Number(amount).toLocaleString("en-LK", {
-            minimumFractionDigits: decimalPlaces,
-            maximumFractionDigits: decimalPlaces
-        });
+
+    // Last day of current month
+    if (!endDate) {
+        const now = new Date();
+
+        const lastDay = new Date(
+            now.getFullYear(),
+            now.getMonth() + 1,
+            0
+        );
+
+        endDate =
+            lastDay.getFullYear() + "-" +
+            String(lastDay.getMonth() + 1).padStart(2, "0") + "-" +
+            String(lastDay.getDate()).padStart(2, "0");
     }
-});
+
+
+    return $.ajax({
+        url: '../AJAX/PNL/getPnLTable.php',
+        method: 'POST',
+        dataType: 'json',
+
+        data: {
+            start: startDate,
+            end: endDate
+        },
+
+        beforeSend: function () {
+            TableLoading($("#tbl_pnls"), "pnls");
+            if ($.fn.DataTable.isDataTable('#tbl_pnls')) {
+                $('#tbl_pnls').DataTable().clear().destroy();
+            }
+        },
+
+        success: function (response) {
+
+            if (!response.status) {
+                toastr.error(
+                    response.message || "Unable to load Profit/Loss data."
+                );
+                return;
+            }
+
+            let html = '';
+
+            let rowNo = 1;
+
+            /*
+            |--------------------------------------------------------------------------
+            | Sales Revenue
+            |--------------------------------------------------------------------------
+            */
+
+            html += `
+                <tr>
+                    <td>${rowNo++}</td>
+
+                    <td>
+                        Sales Revenue
+                    </td>
+
+                    <td style="text-align:right;">
+                        ${formatPnLAmount(response.totalRevenue)}
+                    </td>
+
+                    <td></td>
+                    <td></td>
+                </tr>
+            `;
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | Cost Of Goods Sold
+            |--------------------------------------------------------------------------
+            */
+
+            html += `
+                <tr>
+                    <td>${rowNo++}</td>
+
+                    <td>
+                        Cost Of Goods Sold
+                    </td>
+
+                    <td style="text-align:right;">
+                        ${formatPnLAmount(
+                            response.totalCost,
+                            true
+                        )}
+                    </td>
+
+                    <td></td>
+                    <td></td>
+                </tr>
+            `;
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | Gross Profit
+            |--------------------------------------------------------------------------
+            */
+
+            html += `
+                <tr>
+                    <td>${rowNo++}</td>
+
+                    <td>
+                        <b style="
+                            font-size:25px;
+                            color:#000;
+                        ">
+                            Gross Profit
+                        </b>
+                    </td>
+                    <td>
+                    </td>
+
+                    <td
+                        style="text-align:right;">
+
+                        <b style="
+                            font-size:25px;
+                            color:#000;
+                        ">
+                            ${formatPnLProfitLoss(
+                                response.grossProfit
+                            )}
+                        </b>
+
+                    </td>
+                    <td></td>
+                </tr>
+            `;
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | Expense Rows
+            |--------------------------------------------------------------------------
+            */
+
+            if (
+                response.expenses &&
+                response.expenses.length > 0
+            ) {
+            console.log(response.expenses);
+
+                response.expenses.forEach(function (expense) {
+
+                    html += `
+                        <tr>
+                            <td>${rowNo++}</td>
+
+                            <td>
+                                <div style="font-weight:600; color:#000;">
+                                    ${expense.category || "Uncategorized"}
+                                </div>
+
+                                <small style="display:block; color:#777; margin-top:3px;">
+                                    ${expense.reason || ""}
+                                </small>
+                            </td>
+
+                            <td style="text-align:right;">
+                                ${formatPnLAmount(
+                                    expense.amount
+                                )}
+                            </td>
+
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    `;
+
+                });
+
+            }
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | Total Expenses
+            |--------------------------------------------------------------------------
+            */
+
+            html += `
+                <tr>
+                    <td>${rowNo++}</td>
+
+                    <td>
+                        <b style="
+                            font-size:25px;
+                            color:#000;
+                        ">
+                            Total Expenses
+                        </b>
+                    </td>
+                    <td>
+                    </td>
+
+                    <td
+                        style="text-align:right;">
+
+                        <b style="
+                            font-size:25px;
+                            color:#000;
+                        ">
+                            ${formatPnLAmount(
+                                response.totalExpenses,
+                                true
+                            )}
+                        </b>
+
+                    </td>
+                    <td></td>
+                </tr>
+            `;
+
+
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | Net Profit / Loss Footer
+            |--------------------------------------------------------------------------
+            */
+
+            html += `
+                <tr>
+                    <td>${rowNo++}</td>
+                    <td>
+
+                        <b style="
+                            font-size:25px;
+                            color:#000;
+                            text-align:center;
+                        ">
+                            Net Profit/Loss
+                        </b>
+
+                    </td>
+                    <td></td>
+                    <td
+                        style="text-align:right;">
+
+                        <b style="
+                            font-size:25px;
+                            color:#000;
+                        ">
+                            ${formatPnLProfitLoss(
+                                response.netProfit
+                            )}
+                        </b>
+
+                    </td>
+                    <td></td>
+
+                </tr>
+            `;
+
+
+            $("#tbl_pnls tbody").html(html);
+
+            $('#tbl_pnls').DataTable({
+                paging: true,
+                lengthChange: true,
+                searching: true,
+                pageLength: 25,
+                ordering: false
+            });
+
+            exportTableButtons('tbl_pnls');
+        },
+
+        error: function (xhr, status, error) {
+
+            console.log(
+                "P&L Table AJAX Error:",
+                status,
+                error
+            );
+
+            console.log(
+                xhr.responseText
+            );
+
+            toastr.error(
+                "An error occurred while loading Profit/Loss table.",
+                "Error"
+            );
+        }
+    });
+}
 function openModal(url, title = "Modal"){
   $("#modal").iziModal('destroy');
   $("#modal").iziModal({
@@ -466,8 +673,59 @@ function openModal(url, title = "Modal"){
   });
   $("#modal").iziModal('open');
 }
+function formatPnLAmount(amount, brackets = false) {
+
+    amount = parseFloat(amount) || 0;
+
+    let formatted = Math.abs(amount).toLocaleString(
+        undefined,
+        {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        }
+    );
+
+    if (brackets && amount != 0) {
+        return "(" + formatted + ")";
+    }
+
+    return formatted;
+}
+
+
+function formatPnLProfitLoss(amount) {
+
+    amount = parseFloat(amount) || 0;
+
+    let formatted = Math.abs(amount).toLocaleString(
+        undefined,
+        {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        }
+    );
+
+    /*
+     * Negative means Loss
+     */
+    if (amount < 0) {
+        return "(" + formatted + ")";
+    }
+
+    return formatted;
+}
+
+
+function escapeHtml(value) {
+
+    return $("<div>")
+        .text(value ?? "")
+        .html();
+}
 $(document).ready(function(){
-    fetchpnlData();
+    getPnLTable();
+    getCommon();
+    getPnLTrend();
     $("#headerCollapse2").trigger("click");
     $(document).on('click', '.open-modal', function (e) {
       e.preventDefault();
@@ -475,21 +733,98 @@ $(document).ready(function(){
       let title = $(this).data('title') || 'Company';
       openModal(url,title);
     });
-    $("#refresh").click(function(){
+    $("#pnl_start_date, #pnl_end_date").on("change", function () {
+
+        var startdate = $("#pnl_start_date").val();
+        var enddate   = $("#pnl_end_date").val();
+
+        if (!startdate) {
+            $("#pnl_start_date").focus();
+            return;
+        }
+
+        if (!enddate) {
+            $("#pnl_end_date").focus();
+            return;
+        }
+        if (enddate < startdate) {
+            toastr.warning(
+                "End date cannot be earlier than start date.",
+                "Invalid Date Range"
+            );
+            $("#pnl_end_date").focus();
+            return;
+        }
+
+        getCommon(startdate, enddate);
+        getPnLTrend(startdate, enddate);
+        getPnLTable(startdate, enddate);
+    });
+    $("#refresh").click(function () {
+
         let $btn = $(this);
         let $icon = $btn.find("i");
+
+        let startDate = $("#pnl_start_date").val();
+        let endDate   = $("#pnl_end_date").val();
+
+        if (!startDate) {
+            $("#pnl_start_date").focus();
+            toastr.warning("Please select a start date.");
+            return;
+        }
+
+        if (!endDate) {
+            $("#pnl_end_date").focus();
+            toastr.warning("Please select an end date.");
+            return;
+        }
+
+        if (endDate < startDate) {
+            toastr.warning(
+                "End date cannot be earlier than start date.",
+                "Invalid Date Range"
+            );
+            return;
+        }
+
+        // Start refresh animation
         $btn.prop("disabled", true);
+
         $icon.css({
             "animation": "spin 0.8s linear infinite",
             "display": "inline-block"
         });
-        setTimeout(() => {
-            fetchpnlData().always(function () {
-                // Stop spinning when AJAX completes
-                $btn.prop("disabled", false);
-                $icon.css("animation", "none");
-            });     
-        }, 1500);
-                   
+
+
+        $.when(
+            getPnLTable(startDate, endDate),
+            getCommon(startDate, endDate),
+            getPnLTrend(startDate, endDate)
+        )
+        .done(function () {
+
+            // All 3 AJAX requests completed successfully
+            $btn.prop("disabled", false);
+            $icon.css("animation", "none");
+
+            toastr.success(
+                "Profit/Loss data refreshed successfully."
+            );
+
+        })
+        .fail(function () {
+
+            // At least one AJAX request failed
+            $btn.prop("disabled", false);
+            $icon.css("animation", "none");
+
+            toastr.error(
+                "Unable to refresh all Profit/Loss data.",
+                "Error"
+            );
+
+        });
+
     });
 })

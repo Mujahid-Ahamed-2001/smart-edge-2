@@ -7,8 +7,8 @@ $dbObj = new DBTransactions();
 
 $shop_id = $_SESSION["shop_id"] ?? 0;
 
-$start = !empty($_GET['start']) ? $_GET['start'] : date('Y-m-01');
-$end   = !empty($_GET['end'])   ? $_GET['end']   : date('Y-m-t');
+$start = !empty($_POST['start']) ? $_POST['start'] : date('Y-m-01');
+$end   = !empty($_POST['end'])   ? $_POST['end']   : date('Y-m-t');
 
 $sql = "SELECT
 
@@ -31,24 +31,8 @@ $sql = "SELECT
         WHERE h.shop_SHID = ?
         AND h.InvStat = 1
         AND h.EffectiveDate BETWEEN ? AND ?
-    ) AS total_cost,
-    /* Total Orders */
-    (
-        SELECT COUNT(*)
-        FROM invoiceheader
-        WHERE shop_SHID = ?
-        AND InvStat = 1
-        AND EffectiveDate BETWEEN ? AND ?
-        AND (SELECT COUNT(*) AS COUNT FROM invoicedetails d WHERE d.InvoiceHeader_IHID = invoiceheader.IHID) > 0
-    ) AS total_orders,
-
-    /* Low Stock Items */
-    (
-        SELECT COUNT(*)
-        FROM inventory
-        WHERE shop_SHID = ?
-        AND CurrentQty <= 10 AND is_default !=1
-    ) AS low_stock_items
+        AND (SELECT COUNT(*) AS COUNT FROM invoicedetails d WHERE d.InvoiceHeader_IHID = h.IHID) > 0 
+    ) AS total_cost
 ";
 
 $params = [
@@ -56,22 +40,22 @@ $params = [
     $shop_id, $start, $end,
 
     // Cost
-    $shop_id, $start, $end,
-
-    // Orders
-    $shop_id, $start, $end,
-
-    // Low stock
-    $shop_id
+    $shop_id, $start, $end
 ];
 
 $result = $dbObj->getMultipleData($sql, $params);
 $gross_profit = (float)$result[0]["total_revenue"] - (float)$result[0]["total_cost"];
+$sql2 = "SELECT SUM(ExpenseAmount) AS totExp FROM expenses WHERE status=1 AND is_deleted!=1 AND shop_SHID=? AND EffectiveDate BETWEEN ? AND ?";
+$params2 = [
+    $shop_id, $start, $end
+];
+$result2 = $dbObj->getMultipleData($sql2, $params2);
+
+$netProfit = (float)$gross_profit - (float)$result2[0]["totExp"];
 
 echo json_encode([
-    "totalRevenue"  => (float)$result[0]["total_revenue"],
-    "totalCost"     => (float)$result[0]["total_cost"],
-    "grossProfit"   => (float)$gross_profit,
-    "totalOrders"   => (int)$result[0]["total_orders"],
-    "lowStockItems" => (int)$result[0]["low_stock_items"]
+    "totalRevenue"  => number_format((float)$result[0]["total_revenue"], 2,".", ","),
+    "totalCost"     => number_format((float)$result[0]["total_cost"], 2,".", ","),
+    "grossProfit"   => number_format((float)$gross_profit, 2,".", ","),
+    "netProfit"   => number_format((float)$netProfit, 2,".", ",")
 ]);

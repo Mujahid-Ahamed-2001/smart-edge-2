@@ -140,15 +140,16 @@ $date=date("Y-m-d");
     <!-- cash counter summary -->
     <?php 
     $counterObj = new Counter();
-    $counterData = $counterObj->getCounterTotalByUser($user_id,$shop_id);
+    $counterData = $counterObj->getCounterByCCID($counter_id);
 
     //getcounter total
     $sql = "";
 
     $counter_total = floatval($counterData[0]['CounterTotal']);
+    $CounterDate = $counterData[0]['CounterDate'];
     ?>
 
-    <p style="font-size: 24px; font-weight: bold; text-align:center;">Counter Summary Report</p>
+    <p style="font-size: 24px; font-weight: bold; text-align:center;">Counter Summary Report <?php echo $CounterDate?></p>
 
     <!------------------------------------- Bill Details ------------------------------->
     <div>
@@ -317,26 +318,26 @@ $date=date("Y-m-d");
     </p>
 
     <input type="hidden" name="" value="<?=$bill_no?>" id="return">
-    <!-- <canvas id="barcode"></canvas>
+    <!-- <canvas id="barcode"></canvas> -->
     <script>
-        $(document).ready(function() {
-            var value = $("#return").val();
-            if (value) 
-            {
-                JsBarcode("#barcode", value, {
-                    format: "CODE128",
-                    lineColor: "#000",
-                    width: 2,
-                    height: 50,
-                    displayValue: true
-                });
-            } else {
-                alert("Please enter a value for the barcode.");
-            };
-        });
+        // $(document).ready(function() {
+        //     var value = $("#return").val();
+        //     if (value) 
+        //     {
+        //         JsBarcode("#barcode", value, {
+        //             format: "CODE128",
+        //             lineColor: "#000",
+        //             width: 2,
+        //             height: 50,
+        //             displayValue: true
+        //         });
+        //     } else {
+        //         alert("Please enter a value for the barcode.");
+        //     };
+        // });
         setTimeout(function(){
             history.back();
         }, 200);//go back
-    </script> -->
+    </script>
 </body>
 </html>

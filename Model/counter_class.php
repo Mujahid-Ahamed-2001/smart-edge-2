@@ -61,11 +61,20 @@ Class Counter extends Dbh
 
     public function getCounterTotalByUser($user_id, $shop_id)
     {
-        $sql = "SELECT SUM(NetAmount) AS CounterTotal FROM invoiceheader ih
+        $sql = "SELECT SUM(NetAmount) AS CounterTotal, CounterDate FROM invoiceheader ih
         INNER JOIN cashcounter c ON c.CCID = ih.CashCounter_CCID
         WHERE c.user_USID = ? AND c.CounterStat = 1 AND c.shop_SHID=? AND ih.InvStat=1 AND (SELECT COUNT(*) AS COUNT FROM invoicedetails id WHERE id.InvoiceHeader_IHID = ih.IHID) > 0;";
         $stmt = $this->connect()->prepare($sql);
         $stmt->execute([$user_id, $shop_id]);
+        return $stmt->fetchAll();
+    }//get categories
+    public function getCounterByCCID($counter_id)
+    {
+        $sql = "SELECT SUM(NetAmount) AS CounterTotal, CounterDate FROM invoiceheader ih
+        INNER JOIN cashcounter c ON c.CCID = ih.CashCounter_CCID
+        WHERE c.CCID = ? AND ih.InvStat=1 AND (SELECT COUNT(*) AS COUNT FROM invoicedetails id WHERE id.InvoiceHeader_IHID = ih.IHID) > 0;";
+        $stmt = $this->connect()->prepare($sql);
+        $stmt->execute([$counter_id]);
         return $stmt->fetchAll();
     }//get categories
 
