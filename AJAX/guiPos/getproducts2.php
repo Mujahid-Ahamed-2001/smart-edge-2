@@ -21,20 +21,9 @@ $is_expire = $shopdata[0]["is_expire"] ?? false;
 $date=date("Y-m-d");
 if(isset($_GET["allproducts"]))
 {
-    if($is_multicategory==1 )
-    {
-        $sql = "SELECT * FROM `products` p 
-        INNER JOIN subcategories sc ON sc.SCID=p.Subcategories_SCID
-        INNER JOIN shop s ON s.SHID=p.shop_SHID
-        WHERE s.Company_CMID='$company_id' AND p.ProductStat=1  ORDER BY p.ItemName,p.ItemType ASC;";
-        $shopie=1;
-    }
-    else
-    {
-        $sql = "SELECT * FROM `products` p 
-        INNER JOIN subcategories sc ON sc.SCID=p.Subcategories_SCID
-        WHERE p.shop_SHID='$shop_id' AND p.ProductStat=1  ORDER BY p.ItemName,p.ItemType ASC;";
-    }
+    $sql = "SELECT * FROM `products` p 
+        LEFT JOIN subcategories sc ON sc.SCID=p.Subcategories_SCID
+        WHERE p.ProductStat=1  ORDER BY p.ItemName,p.ItemType ASC;";
     $productData = $dbObj->getData($sql); 
     
 
@@ -561,14 +550,8 @@ elseif (isset($_GET["product_id"])) {
     $shopie = 0;
     
     // Fetch product data
-    $sql = "SELECT * FROM `products` p ";
-    if ($is_multicategory == 1 || $is_commonStock == 1) {
-        $sql .= "INNER JOIN shop s ON s.SHID=p.shop_SHID WHERE s.Company_CMID='$company_id'";
-        $shopie = 1;
-    } else {
-        $sql .= "WHERE p.shop_SHID='$shop_id'";
-    }
-    $sql .= " AND p.PDID='$product_id' AND p.ProductStat=1 ORDER BY p.ItemName, p.ItemType ASC";
+    $sql = "SELECT * FROM `products` p WHERE p.PDID='$product_id' AND p.ProductStat=1 ORDER BY p.ItemName, p.ItemType ASC";
+    $sql .= " ";
     
     $productData = $dbObj->getData($sql);
     if (!$productData) returnError("00004", "Product not found");

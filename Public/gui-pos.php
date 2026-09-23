@@ -48,10 +48,11 @@ function CounterCheck($user_id, $shop_id)
     date_default_timezone_set("Asia/Colombo");
     $current_date = date("Y-m-d");
 
-    $sql = "SELECT * FROM cashcounter WHERE user_USID=".$user_id." AND shop_SHID=".$shop_id." AND CounterStat = 1 AND CounterDate = '".$current_date."';";
+    $sql = "SELECT * FROM cashcounter WHERE user_USID='$user_id' AND shop_SHID='$shop_id' AND CounterStat = 1 AND CounterDate = '$current_date' ORDER BY CCID DESC LIMIT 1;";
 
     $dbObj = new DBTransactions();
     $dbData = $dbObj->getData($sql);
+    // echo "sql "+$sql;
 
     if(!empty($dbData))
     {

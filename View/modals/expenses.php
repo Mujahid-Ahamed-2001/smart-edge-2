@@ -42,6 +42,58 @@ $UserType = isset($_SESSION['UserType']) ? $_SESSION['UserType'] : 0;
 </head>
 <body>
     <script>
+        function getExpenseCat() {
+            return $.ajax({
+                url: "../../AJAX/Expense/fetchExpenseCatData2.php",
+                method: "POST",
+                dataType: "json"
+            }).then(function (response) {
+
+                if (Number(response.status) === 1) {
+                    return response.data || [];
+                }
+
+                toastr.error(
+                    response.message || "Unable to fetch expense categories.",
+                    "Error"
+                );
+
+                return $.Deferred().reject(response).promise();
+            });
+        }
+
+        function append_cat(cat_id = "") {
+
+            const $expense_cat = $("#expense_cat");
+
+            $expense_cat.empty().append(
+                $("<option>", {
+                    value: "",
+                    text: "Select Expense Category"
+                })
+            );
+
+            return getExpenseCat()
+                .then(function (expenseCates) {
+
+                    $.each(expenseCates, function (index, cat) {
+
+                        $expense_cat.append(
+                            $("<option>", {
+                                value: cat.ECID,
+                                text: cat.expense_category,
+                                selected: String(cat.ECID) === String(cat_id)
+                            })
+                        );
+
+                    });
+
+                    return expenseCates;
+                })
+                .fail(function (error) {
+                    console.error("Expense categories request failed:", error);
+                });
+        }
         function get_payment_methods() {
             return $.ajax({
                 url: "../../AJAX/GRN/getpaymentMethods.php",
@@ -61,8 +113,8 @@ $UserType = isset($_SESSION['UserType']) ? $_SESSION['UserType'] : 0;
             });
         }
 
-        function appendPayments(PMID = 0) 
-        {
+        function appendPayments(PMID = 0) {
+
             const $payment = $("#payment");
 
             $payment.empty().append(
@@ -72,9 +124,11 @@ $UserType = isset($_SESSION['UserType']) ? $_SESSION['UserType'] : 0;
                 })
             );
 
-            get_payment_methods()
+            return get_payment_methods()
                 .then(function (payMethods) {
+
                     $.each(payMethods, function (index, method) {
+
                         $payment.append(
                             $("<option>", {
                                 value: method.PMID,
@@ -82,15 +136,15 @@ $UserType = isset($_SESSION['UserType']) ? $_SESSION['UserType'] : 0;
                                 selected: String(method.PMID) === String(PMID)
                             })
                         );
+
                     });
+
+                    return payMethods;
                 })
                 .fail(function (error) {
                     console.error("Payment methods request failed:", error);
                 });
         }
-        $(function () {
-            appendPayments();
-        });
     </script>
 <?php 
 $condition = $_GET["condition"];
@@ -113,10 +167,18 @@ if($condition=="new")
     $subtitle ="Fill in the details below to add a new expense";
     $btnText ="<i class='ti ti-device-floppy'></i> Create Expense";
     $action .="?condition=$condition";
+    ?>
+    <script>
+        $(document).ready(function () {
+            append_cat();
+            appendPayments();
+        })
+    </script>
+    <?php
 }
 else if($condition=="edit")
 {
-    if(!isset($_GET["ETID"]) || empty($_GET["ETID"])) {
+    if(!isset($_GET["EPID"]) || empty($_GET["EPID"])) {
         ?>
         <script>
             parent.toastr.error("Error: Expense ID is missing.", "Error");
@@ -124,44 +186,71 @@ else if($condition=="edit")
         </script>
         <?php
     }
-    $ETID = $_GET["ETID"];
+    $EPID = $_GET["EPID"];
     $title ="Edit Expense";
     $subtitle ="Fill in the details below to edit the expense";
     $btnText ="<i class='ti ti-edit'></i> Update Expense";
-    $action .="?condition=$condition&ETID=$ETID";
+    $action .="?condition=$condition&EPID=$EPID";
     ?>
     <script>
-        $(document).ready(function() {
-            var ETID = "<?=$ETID?>";
-            var is_default ="";
-            getTypes().always(function(){
-                $.ajax({
-                    url: "../../Controller/AddExpensesController2.php",
-                    method: "GET",
-                    data: { condition: "fetch", ETID: ETID },
-                    dataType: "json",
-                    success: function(response) {
-                        if (response.status === 1) {
-                            var data = response.data;
-                            $("#expense_category").val(data.expense_ctg);
-                            $("#expense_type").val(data.expense_ETID);
-                            $("#status").prop("checked", data.status == 1);
-                            $("#is_default").prop("checked", data.is_default == 1);
-                            is_default = data.is_default;
-                        } else {
-                            parent.toastr.error(response.message, "Error");
-                            parent.$("#modal").iziModal("close");
-                        }
-                    },
-                    error: function(xhr, status, error) {
-                        console.log("AJAX Error:", status, error);
-                        console.log("Response:", xhr.responseText);
-                        parent.toastr.error("An error occurred while fetching Expense data.", "Error");
+        $(document).ready(function () {
+
+            var EPID = "<?=$EPID?>";
+
+            $.ajax({
+                url: "../../Controller/AddExpensesController2.php",
+                method: "GET",
+                data: {
+                    condition: "fetch",
+                    EPID: EPID
+                },
+                dataType: "json",
+
+                success: function (response) {
+
+                    console.log("Expense response:", response);
+
+                    if (Number(response.status) === 1) {
+
+                        var data = response.data;
+
+                        // Normal inputs
+                        $("#expense").val(data.ExpenseReason);
+                        $("#expense_amount").val(data.ExpenseAmount);
+
+                        // Checkboxes
+                        $("#status").prop("checked", Number(data.status) === 1);
+                        $("#is_default").prop("checked", Number(data.is_default) === 1);
+
+                        // Load category and select current category
+                        append_cat(data.expensecategory_id);
+
+                        // Load payment methods and select current payment
+                        appendPayments(data.paymethod_id);
+
+                    } else {
+
+                        parent.toastr.error(
+                            response.message || "Expense not found.",
+                            "Error"
+                        );
+
                         parent.$("#modal").iziModal("close");
                     }
-                });    
-            })
-            
+                },
+
+                error: function (xhr, status, error) {
+
+                    console.log("AJAX Error:", status, error);
+                    console.log("Response:", xhr.responseText);
+
+                    parent.toastr.error(
+                        "An error occurred while fetching Expense data.",
+                        "Error"
+                    );
+                }
+            });
+
         });
     </script>
     <?php
@@ -203,7 +292,7 @@ else
                             <label class="form-label">Status</label>
                             <div class="input-group">
                                 <div class="form-check form-switch">
-                                    <input class="form-check-input" type="checkbox" name="status" id="status" checked>    
+                                    <input class="form-check-input" type="checkbox" name="status" id="status" value="1" checked>    
                                 </div>                            
                             </div>
                         </div>
@@ -217,7 +306,7 @@ else
                                 <label class="form-label">Default</label>
                                 <div class="input-group">
                                     <div class="form-check form-switch">
-                                        <input class="form-check-input" type="checkbox" name="is_default" id="is_default">    
+                                        <input class="form-check-input" type="checkbox" name="is_default" id="is_default" value="1">    
                                     </div>                            
                                 </div>
                             </div>
@@ -238,7 +327,7 @@ else
                             <label class="form-label required">Expense Category</label>
                             <div class="filter-group">
                                 <select name="expense_cat" id="expense_cat" class="form-select modal-input" required></select>  
-                                <button class="btn-refresh" id="refresh-cat">
+                                <button type="button" class="btn-refresh" id="refresh-cat">
                                     <i class="ti ti-refresh"></i>
                                 </button>  
                             </div>
@@ -329,7 +418,9 @@ else
                         setTimeout(() => {
                             if(ref=="AddExpense")
                             {
-                                parent.fetchExpenseCatData();    
+                                parent.fetchExpenseData();    
+                                parent.fetchExpenseSummary();    
+                                parent.fetchExpenseCharts();    
                             }
                             parent.$("#modal").iziModal("close");
                         }, 300);

@@ -1,3 +1,3 @@
---  05-07-2026
+--  14-09-2026
 
-ALTER TABLE `customers` ADD `CustEmail` VARCHAR(255) NULL AFTER `CustContact`;
+ALTER TABLE `products` ADD `multi` INT NOT NULL DEFAULT '0' COMMENT '0 = not multi\r\n1 = multi';

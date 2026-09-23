@@ -1,164 +1,326 @@
-<?php
-include "../Includes/includes.php";
+<?php 
+include '../Includes/includes.php';
 include '../Includes/authcheck.php';
 
-// Debugging: Enable error reporting
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
-
 $shop_id = $_SESSION['shop_id'];
+
 ?>
-
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-
 <head>
-    <?php
-    include '../View/head.php';
-    // include '../View/loader.php';
-
-    ?>
+  <?php 
+  include '../View/head.php';
+  // include '../View/loader.php';
+  ?>
+  <link rel="stylesheet" href="../Assets/css/AddExpenses.css">
 </head>
-
 <body>
-    <?php
-    //load editor
-    $Fe_Id = 0;
-    if (isset($_GET['Fe_Id'])) {
-        $Fe_Id = $_GET['Fe_Id'];
-        echo "<script>";
-        echo "$(document).ready(function(){";
-        echo "$('#add-expenses').modal('toggle');";
-        echo "});";
-        echo "</script>";
-    }
-    include '../View/modals/add-expenses.php';
-    include '../View/modals/Edit-expenses.php';
-
-    ?>
+    <div id="modal"></div>
+    <!--  Body Wrapper -->
     <div class="h-100vh">
-        <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
-            data-sidebar-position="fixed" data-header-position="fixed">
-            <?php include '../View/sidebar.php'; 
+        <div class="page-wrapper" id="main-wrapper">
+            <!-- Sidebar Start -->
+            <?php 
+            include '../View/sidebar.php';
             $feature_id=13;
-            include '../Includes/viewPermission.php';?>
+            include '../Includes/viewPermission.php';
+            ?>
+            <!--  Sidebar End -->
+            <!--  Main wrapper -->
             <div class="body-wrapper">
-                <?php include '../View/header.php';?>
-                <div class="container-fluid">
-                    <?php 
-                    if(isset($_SESSION["exp_edit"]) && $_SESSION["exp_edit"]==1)
-                    {
-                        ?>
-                        <div class="alert alert-success">
-                            Expense Edited Successfully
-                        </div>
-                        <?php
-                        unset($_SESSION["exp_edit"]);
-                    }
-                    ?>
-                    <div class="card">
-                        <div class="card-header">
-                            <h5 class="card-title fw-semibold mb-4">
-                                Add Expenses
-                                <?php 
-                                if($create==1 || $userType==1)
-                                {
-                                    ?>
-                                <button type="button" class="btn btn-primary rounded-pill float-end"
-                                    id="btn_Add_Expense_modal">
-                                    <small>Add Expenses</small>
-                                </button>
-                                <?php
-                                }
-                                ?>
-                            </h5>
-                        </div>
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="table-responsive">
-                                        <table class="table search-table align-middle text-nowrap" id="tbl_expenses">
-                                            <thead>
-                                                <tr>
-                                                    <th>ID</th>
-                                                    <th>Date</th>
-                                                    <th>Expense Amount</th>
-                                                    <th>Expense Category</th>
-                                                    <th>Remarks</th>
-                                                    <th>User</th>
-                                                    <th>Action</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <?php
-                                                $sql = "SELECT * FROM expenses 
-                                                INNER JOIN expensecategory ON expensecategory.ECID = expenses.expensecategory_id
-                                                INNER JOIN user ON user.USID = expenses.user_USID
-                                                WHERE shop_SHID = ".$shop_id." ORDER BY EffectiveDate DESC LIMIT 50;";
+                <!--  Header Start -->
+                <?php 
+                include '../View/header.php';
+                ?>
+                <?php 
+                $shop = $shopObj->getOneShop($shop_id);
+                ?>
+                <?php $today = date('d-m-Y');?>
+                <input type="hidden" name="" id="today" value="<?= $today ?>">
+                <input type="hidden" name="" id="create_access" value="<?= $create ?>">
+                <input type="hidden" name="" id="view_access" value="<?= $view ?>">
+                <input type="hidden" name="" id="edit_access" value="<?= $edit ?>">
+                <input type="hidden" name="" id="delete_access" value="<?= $delete ?>">
+                <input type="hidden" name="" id="verify_access" value="<?= $verify ?>">
+                <input type="hidden" name="" id="print_access" value="<?= $print ?>">
+                <input type="hidden" name="" id="userType" value="<?= $userType ?>">
+                <input type="hidden" name="" id="shop_name" value="<?=$shop[0]['ShopName']?>">
+                <input type="hidden" name="" id="shop_id" value="<?=$shop_id?>">
+                <input type="hidden" name="" id="shop_address_one" value="<?=$shop[0]['AddressLineOne']?> ">
+                <input type="hidden" name="" id="shop_address_two" value="<?=$shop[0]['AddressLineTwo']?>">
+                <input type="hidden" name="" id="shop_city" value="<?=$shop[0]['City']?>">
+                <input type="hidden" name="" id="shop_number" value="<?=$shop[0]['PhoneNumber']?> ">
+                <input type="hidden" name="" id="title" value="Expenses Report">
+                <!--  Header End -->
 
+                <div class="container-fluid py-4">
+                    <!-- Expenses Dashboard Header -->
+                    <section class="expenses-dashboard-head">
 
-                                                $dbObj = new DBTransactions();
-                                                $expenData = $dbObj->getData($sql);
+                        <div class="expenses-head-row">
 
-                                                $i=1;
-                                                if(count($expenData)>0)
-                                                {
-                                                foreach ($expenData as $row): ?>
-                                                <tr>
-                                                    <td><?php echo $i; ?></td>
-                                                    <td><?php echo $row['EffectiveDate']; ?></td>
-                                                    <td><?php echo $row['ExpenseAmount']; ?></td>
-                                                    <td><?php echo $row['expense_ctg']; ?></td>
-                                                    <td><?php echo $row['ExpenseReason']; ?></td>
-                                                    <td><?php echo $row['UserName']; ?></td>
-                                                    <td>
-                                                        <?php 
-                                                        if($userType==1 || $edit==1) {
-                                                        ?>
-                                                    <a href="javascript:void(0);" class="btn_edit btn btn-primary me-2" id="btn_edit"
-                                                    data-epid="<?php echo $row['EPID']; ?>">Edit</a>
-                
-                                                        <?php } ?>
+                            <div class="expenses-heading">
+                                <h1>Expenses Dashboard</h1>
 
-                                                        <?php if($userType==1 || $delete==1) { ?>
-                                                        <a href="javascript:void(0);" class="btn_delete btn btn-danger"
-                                                            data-epid="<?php echo $row['EPID']; ?>">Delete</a>
-                                                        <?php } ?>
-                                                    </td>
+                                <div class="expenses-breadcrumb">
+                                    <a href="javascript:void(0)">Home</a>
+                                    <i class="ti ti-chevron-right"></i>
 
-                                                </tr>
-                                                <?php 
-                                                $i++;
-                                                endforeach; 
-                                                }
-                                                ?>
-                                            </tbody>
-                                        </table>
-                                    </div>
+                                    <a href="javascript:void(0)">Expenses</a>
+                                    <i class="ti ti-chevron-right"></i>
+
+                                    <span>Dashboard</span>
                                 </div>
                             </div>
+
+                            <div class="expenses-head-actions">
+
+                                <?php
+                                $start_date = date('Y-m-01');
+                                $end_date   = date('Y-m-t');
+                                ?>
+
+                                <div class="expense-date-filter">
+                                    <i class="ti ti-calendar expense-date-icon"></i>
+                                    <input type="date" id="expense_start_date" name="expense_start_date" class="expense-date-input" value="<?= $start_date ?>" max="<?= $end_date ?>" >
+
+                                    <span class="expense-date-separator">-</span>
+                                    <i class="ti ti-calendar expense-date-icon"></i>
+                                    <input type="date" id="expense_end_date" name="expense_end_date" class="expense-date-input" value="<?= $end_date ?>" min="<?= $start_date ?>" >
+                                    <button type="button" id="refreshExpenseDashboard" class="expense-date-refresh" title="Refresh dashboard" >
+                                        <i class="ti ti-refresh"></i>
+                                    </button>
+
+                                </div>
+
+                                <?php if ($create == 1) { ?>
+                                    <a href="../View/modals/expenses.php?condition=new&ref=AddExpense" class="expense-add-button open-modal" data-title="Add Expense" >
+                                        <i class="ti ti-plus"></i>
+                                        <span>Add Expense</span>
+                                    </a>
+                                <?php } ?>
+
+                            </div>
+
+                        </div>
+
+                        <!-- Expense Summary Cards -->
+                        <div class="expense-summary-grid">
+
+                            <!-- Total Expenses -->
+                            <article class="expense-summary-card">
+                                <div class="summary-icon summary-icon-purple">
+                                    <i class="ti ti-wallet"></i>
+                                </div>
+
+                                <div class="summary-content">
+                                    <span class="summary-label">Total Expenses</span>
+
+                                    <h2 id="summaryTotalExpenses">
+                                        Rs. 0.00
+                                    </h2>
+
+                                    <div class="summary-comparison summary-neutral"
+                                        id="summaryTotalComparison">
+
+                                        <i class="ti ti-minus"></i>
+
+                                        <span>
+                                            <strong>0%</strong>
+                                            from previous period
+                                        </span>
+
+                                    </div>
+                                </div>
+                            </article>
+
+
+                            <!-- This Month -->
+                            <article class="expense-summary-card">
+                                <div class="summary-icon summary-icon-pink">
+                                    <i class="ti ti-receipt"></i>
+                                </div>
+
+                                <div class="summary-content">
+                                    <span class="summary-label">This Month</span>
+
+                                    <h2 id="summaryMonthExpenses">
+                                        Rs. 0.00
+                                    </h2>
+
+                                    <div class="summary-comparison summary-neutral"
+                                        id="summaryMonthComparison">
+
+                                        <i class="ti ti-minus"></i>
+
+                                        <span>
+                                            <strong>0%</strong>
+                                            from last month
+                                        </span>
+
+                                    </div>
+                                </div>
+                            </article>
+
+
+                            <!-- This Week -->
+                            <article class="expense-summary-card">
+                                <div class="summary-icon summary-icon-green">
+                                    <i class="ti ti-calendar"></i>
+                                </div>
+
+                                <div class="summary-content">
+                                    <span class="summary-label">This Week</span>
+
+                                    <h2 id="summaryWeekExpenses">
+                                        Rs. 0.00
+                                    </h2>
+
+                                    <div class="summary-comparison summary-neutral"
+                                        id="summaryWeekComparison">
+
+                                        <i class="ti ti-minus"></i>
+
+                                        <span>
+                                            <strong>0%</strong>
+                                            from last week
+                                        </span>
+
+                                    </div>
+                                </div>
+                            </article>
+
+
+                            <!-- Today -->
+                            <article class="expense-summary-card">
+                                <div class="summary-icon summary-icon-orange">
+                                    <i class="ti ti-wallet"></i>
+                                </div>
+
+                                <div class="summary-content">
+                                    <span class="summary-label">Today</span>
+
+                                    <h2 id="summaryTodayExpenses">
+                                        Rs. 0.00
+                                    </h2>
+
+                                    <div class="summary-comparison summary-neutral"
+                                        id="summaryTodayComparison">
+
+                                        <i class="ti ti-minus"></i>
+
+                                        <span>
+                                            <strong>0%</strong>
+                                            from previous day
+                                        </span>
+
+                                    </div>
+                                </div>
+                            </article>
+
+                        </div>
+                    </section>
+                    <!-- Expense Management Charts -->
+                    <section class="expense-analytics-grid">
+
+                        <!-- Expenses Overview -->
+                        <div class="expense-analytics-card">
+
+                            <div class="analytics-card-header">
+                                <h3>Expenses Overview</h3>
+
+                            </div>
+
+                            <div class="expense-overview-body">
+
+                                <div class="expense-donut-wrapper">
+                                    <canvas id="expenseOverviewChart"></canvas>
+
+                                    <div class="expense-donut-center">
+                                        <span>Total</span>
+                                        <strong id="expenseOverviewTotal">Rs. 485,750</strong>
+                                    </div>
+                                </div>
+
+                                <div class="expense-chart-legend" id="expenseChartLegend">
+                                    <!-- Generated using JavaScript -->
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <!-- Expenses Trend -->
+                        <div class="expense-analytics-card">
+
+                            <div class="analytics-card-header">
+                                <h3>Expenses Trend</h3>
+
+                            </div>
+
+                            <div class="expense-trend-wrapper">
+                                <canvas id="expenseTrendChart"></canvas>
+                            </div>
+
+                        </div>
+
+                    </section>   
+                    <div class="expense-card">
+                        <!-- Header -->
+                        <div class="expense-card-header">
+                            <div class="expense-title">
+                                <div class="expense-icon">
+                                    <i class="ti ti-receipt-2"></i>
+                                </div>
+                                <div>
+                                    <h3>Expenses <a href="javascript:void(0)" id="refresh"><i class="ti ti-reload"></i></a></h3>
+                                    <p>Create and manage expenses</p>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <!-- Divider -->
+                        <div class="card-divider"></div>
+
+                        <!-- Table -->
+                        <div class="table-responsive">
+
+                            <table class="table expense-table align-middle" id="tbl_expenses">
+                                <thead>
+                                    <tr>
+                                        <th width="80">ID</th>
+                                        <th width="450">Expense</th>
+                                        <th width="350">Expense Category</th>
+                                        <th width="350">Expense Amount</th>
+                                        <th width="150">Date</th>
+                                        <th width="150">Status</th>
+                                        <th width="150">Default</th>
+                                        <th width="150">Created By</th>
+                                        <th width="150">Created At</th>
+                                        <th width="250">Modified By</th>
+                                        <th width="150">Modified At</th>
+                                        <th width="250">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+
+                            </table>
+
                         </div>
                     </div>
+
+                    <!-- footer Start  -->
+                    <?php include '../View/footer.php';?> 
+                    <script src="../Assets/js/chart.js"></script>
+                    <script src="../Assets/jquery/AddExpenses2.js"></script>
+                    <!-- footer End  -->
                 </div>
             </div>
         </div>
     </div>
-    <?php include '../View/footer.php'; ?>
-
-    <script src="../Assets/jquery/AddExpenses.js"></script>
-
-    <script>
-    $(document).ready(function() {
-        $("#tbl_expenses").DataTable({
-            paging: true,
-            lengthChange: true,
-            searching: true,
-            // pageLength: 50,
-        }); //data table
-    });
-    </script>
+    <!--  Body Wrapper End -->
 
 </body>
-
 </html>
-

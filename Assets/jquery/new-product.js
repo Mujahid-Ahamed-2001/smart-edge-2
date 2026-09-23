@@ -73,11 +73,11 @@ function fetchProducts($table, $query='', formData='',PDID='')
                 {
                     if(userType === 1 || edit_access === 1)
                     {
-                        statusBadge =`<button class="badge bg-primary productStatus shadow-btn" data-id="${PDID}" id="productStatus_${PDID}">Active</button>`;
+                        statusBadge =`<button class="badge bg-primary productStatus shadow-btn" data-id="${PDID}" id="productStatus_${PDID}"><i class="ti ti-check"></i> Active</button>`;
                     }
                     else
                     {
-                        statusBadge =`<span class="badge bg-primary shadow-btn" data-id="${PDID}" id="productStatus_${PDID}">Active</span>`;
+                        statusBadge =`<span class="badge bg-primary shadow-btn" data-id="${PDID}" id="productStatus_${PDID}"><i class="ti ti-check"></i> Active</span>`;
                     }
                     
                 }
@@ -85,11 +85,11 @@ function fetchProducts($table, $query='', formData='',PDID='')
                 {
                     if(userType === 1 || edit_access === 1)
                     {
-                        statusBadge =`<button class="badge bg-danger productStatus shadow-btn" data-id="${PDID}" id="productStatus_${PDID}">Inactive</button>`;
+                        statusBadge =`<button class="badge bg-danger productStatus shadow-btn" data-id="${PDID}" id="productStatus_${PDID}"><i class="ti ti-alert-circle"></i> Inactive</button>`;
                     }
                     else
                     {
-                        statusBadge =`<span class="badge bg-danger shadow-btn" data-id="${PDID}" id="productStatus_${PDID}">Inactive</span>`;
+                        statusBadge =`<span class="badge bg-danger shadow-btn" data-id="${PDID}" id="productStatus_${PDID}"><i class="ti ti-alert-circle"></i> Inactive</span>`;
                     }
                     
                 }
@@ -107,11 +107,11 @@ function fetchProducts($table, $query='', formData='',PDID='')
                 {
                     if(userType === 1 || edit_access === 1)
                     {
-                        is_fixedPriceBadge =`<button class="badge bg-primary chk_fp shadow-btn" data-id="${PDID}" id="chk_fp_${PDID}">Fixed Price</button>`;
+                        is_fixedPriceBadge =`<button class="badge bg-primary chk_fp shadow-btn" data-id="${PDID}" id="chk_fp_${PDID}"><i class="ti ti-check"></i> Fixed Price</button>`;
                     }
                     else
                     {
-                        is_fixedPriceBadge =`<span class="badge bg-primary shadow-btn" data-id="${PDID}" id="chk_fp_${PDID}">Fixed Price</span>`;
+                        is_fixedPriceBadge =`<span class="badge bg-primary shadow-btn" data-id="${PDID}" id="chk_fp_${PDID}"><i class="ti ti-check"></i> Fixed Price</span>`;
                     }
                     
                     
@@ -120,11 +120,11 @@ function fetchProducts($table, $query='', formData='',PDID='')
                 {
                     if(userType === 1 || edit_access === 1)
                     {
-                        is_fixedPriceBadge =`<button class="badge bg-danger chk_fp shadow-btn" data-id="${PDID}" id="chk_fp_${PDID}">No Fixed Price</button>`;
+                        is_fixedPriceBadge =`<button class="badge bg-danger chk_fp shadow-btn" data-id="${PDID}" id="chk_fp_${PDID}"><i class="ti ti-alert-circle"></i> Non-Fixed Price</button>`;
                     }
                     else
                     {
-                        is_fixedPriceBadge =`<span class="badge bg-danger shadow-btn" data-id="${PDID}" id="chk_fp_${PDID}">No Fixed Price</span>`;
+                        is_fixedPriceBadge =`<span class="badge bg-danger shadow-btn" data-id="${PDID}" id="chk_fp_${PDID}"><i class="ti ti-alert-circle"></i> Non-Fixed Price</span>`;
                     }
                     
                     
@@ -134,11 +134,11 @@ function fetchProducts($table, $query='', formData='',PDID='')
                 {
                     if(userType === 1 || edit_access === 1)
                     {
-                        is_lowStockBadge =`<button class="badge bg-primary shadow-btn chk_ls" data-id="${PDID}" id="chk_ls_${PDID}">Is Low Stock</button>`;
+                        is_lowStockBadge =`<button class="badge bg-primary shadow-btn chk_ls" data-id="${PDID}" id="chk_ls_${PDID}"><i class="ti ti-check"></i> Is Low Stock</button>`;
                     }
                     else
                     {
-                        is_lowStockBadge =`<span class="badge bg-primary shadow-btn" data-id="${PDID}" id="chk_ls_${PDID}">Is Low Stock</span>`;
+                        is_lowStockBadge =`<span class="badge bg-primary shadow-btn" data-id="${PDID}" id="chk_ls_${PDID}"><i class="ti ti-check"></i> Is Low Stock</span>`;
                     }
                     
                     
@@ -147,11 +147,11 @@ function fetchProducts($table, $query='', formData='',PDID='')
                 {
                     if(userType === 1 || edit_access === 1)
                     {
-                        is_lowStockBadge =`<button class="badge bg-danger shadow-btn chk_ls" data-id="${PDID}" id="chk_ls_${PDID}">Not Low Stock</button>`;
+                        is_lowStockBadge =`<button class="badge bg-danger shadow-btn chk_ls" data-id="${PDID}" id="chk_ls_${PDID}"><i class="ti ti-alert-circle"></i> Non-Low Stock</button>`;
                     }
                     else
                     {
-                        is_lowStockBadge =`<span class="badge bg-danger shadow-btn" data-id="${PDID}" id="chk_ls_${PDID}">Not Low Stock</span>`;
+                        is_lowStockBadge =`<span class="badge bg-danger shadow-btn" data-id="${PDID}" id="chk_ls_${PDID}"><i class="ti ti-alert-circle"></i> Non-Low Stock</span>`;
                     }
                     
                     
@@ -273,11 +273,11 @@ function fetchProducts1($table,PDID)
                     {
                         if(userType === 1 || edit_access === 1)
                         {
-                            statusBadge =`<button class="badge bg-primary productStatus shadow-btn" data-id="${PDID}" id="productStatus_${PDID}">Active</button>`;
+                            statusBadge =`<button class="badge bg-primary productStatus shadow-btn" data-id="${PDID}" id="productStatus_${PDID}"><i class="ti ti-check"></i>Active</button>`;
                         }
                         else
                         {
-                            statusBadge =`<span class="badge bg-primary shadow-btn" data-id="${PDID}" id="productStatus_${PDID}">Active</span>`;
+                            statusBadge =`<span class="badge bg-primary shadow-btn" data-id="${PDID}" id="productStatus_${PDID}"><i class="ti ti-check"></i>Active</span>`;
                         }
                         
                     }
@@ -285,11 +285,11 @@ function fetchProducts1($table,PDID)
                     {
                         if(userType === 1 || edit_access === 1)
                         {
-                            statusBadge =`<button class="badge bg-danger productStatus shadow-btn" data-id="${PDID}" id="productStatus_${PDID}">Inactive</button>`;
+                            statusBadge =`<button class="badge bg-danger productStatus shadow-btn" data-id="${PDID}" id="productStatus_${PDID}"><i class="ti ti-alert-circle"></i> Inactive</button>`;
                         }
                         else
                         {
-                            statusBadge =`<span class="badge bg-danger shadow-btn" data-id="${PDID}" id="productStatus_${PDID}">Inactive</span>`;
+                            statusBadge =`<span class="badge bg-danger shadow-btn" data-id="${PDID}" id="productStatus_${PDID}"><i class="ti ti-alert-circle"></i> Inactive</span>`;
                         }
                         
                     }
@@ -307,11 +307,11 @@ function fetchProducts1($table,PDID)
                     {
                         if(userType === 1 || edit_access === 1)
                         {
-                            is_fixedPriceBadge =`<button class="badge bg-primary chk_fp shadow-btn" data-id="${PDID}" id="chk_fp_${PDID}">Fixed Price</button>`;
+                            is_fixedPriceBadge =`<button class="badge bg-primary chk_fp shadow-btn" data-id="${PDID}" id="chk_fp_${PDID}"><i class="ti ti-check"></i> Fixed Price</button>`;
                         }
                         else
                         {
-                            is_fixedPriceBadge =`<span class="badge bg-primary shadow-btn" data-id="${PDID}" id="chk_fp_${PDID}">Fixed Price</span>`;
+                            is_fixedPriceBadge =`<span class="badge bg-primary shadow-btn" data-id="${PDID}" id="chk_fp_${PDID}"><i class="ti ti-check"></i> Fixed Price</span>`;
                         }
                         
                         
@@ -320,11 +320,11 @@ function fetchProducts1($table,PDID)
                     {
                         if(userType === 1 || edit_access === 1)
                         {
-                            is_fixedPriceBadge =`<button class="badge bg-danger chk_fp shadow-btn" data-id="${PDID}" id="chk_fp_${PDID}">No Fixed Price</button>`;
+                            is_fixedPriceBadge =`<button class="badge bg-danger chk_fp shadow-btn" data-id="${PDID}" id="chk_fp_${PDID}"><i class="ti ti-alert-circle"></i> Non-Fixed Price</button>`;
                         }
                         else
                         {
-                            is_fixedPriceBadge =`<span class="badge bg-danger shadow-btn" data-id="${PDID}" id="chk_fp_${PDID}">No Fixed Price</span>`;
+                            is_fixedPriceBadge =`<span class="badge bg-danger shadow-btn" data-id="${PDID}" id="chk_fp_${PDID}"><i class="ti ti-alert-circle"></i> Non-Fixed Price</span>`;
                         }
                         
                         
@@ -334,11 +334,11 @@ function fetchProducts1($table,PDID)
                     {
                         if(userType === 1 || edit_access === 1)
                         {
-                            is_lowStockBadge =`<button class="badge bg-primary shadow-btn chk_ls" data-id="${PDID}" id="chk_ls_${PDID}">Is Low Stock</button>`;
+                            is_lowStockBadge =`<button class="badge bg-primary shadow-btn chk_ls" data-id="${PDID}" id="chk_ls_${PDID}"><i class="ti ti-check"></i> Is Low Stock</button>`;
                         }
                         else
                         {
-                            is_lowStockBadge =`<span class="badge bg-primary shadow-btn" data-id="${PDID}" id="chk_ls_${PDID}">Is Low Stock</span>`;
+                            is_lowStockBadge =`<span class="badge bg-primary shadow-btn" data-id="${PDID}" id="chk_ls_${PDID}"><i class="ti ti-check"></i> Is Low Stock</span>`;
                         }
                         
                         
@@ -347,11 +347,11 @@ function fetchProducts1($table,PDID)
                     {
                         if(userType === 1 || edit_access === 1)
                         {
-                            is_lowStockBadge =`<button class="badge bg-danger shadow-btn chk_ls" data-id="${PDID}" id="chk_ls_${PDID}">Not Low Stock</button>`;
+                            is_lowStockBadge =`<button class="badge bg-danger shadow-btn chk_ls" data-id="${PDID}" id="chk_ls_${PDID}"><i class="ti ti-alert-circle"></i> Non-Low Stock</button>`;
                         }
                         else
                         {
-                            is_lowStockBadge =`<span class="badge bg-danger shadow-btn" data-id="${PDID}" id="chk_ls_${PDID}">Not Low Stock</span>`;
+                            is_lowStockBadge =`<span class="badge bg-danger shadow-btn" data-id="${PDID}" id="chk_ls_${PDID}"><i class="ti ti-alert-circle"></i> Non-Low Stock</span>`;
                         }
                         
                         
@@ -616,15 +616,15 @@ function changeStatus(PDID, btn){
 
                 setTimeout(function(){
 
-                    if(response.ProductStat === 1){
+                    if(response.ProductStat === "1"){
                         btn.removeClass("bg-danger")
                            .addClass("bg-primary")
-                           .text("Active");
+                           .html(`<i class="ti ti-check"></i> Active`);
                     }
                     else{
                         btn.removeClass("bg-primary")
                            .addClass("bg-danger")
-                           .text("Inactive");
+                           .html(`<i class="ti ti-alert-circle"></i> Inactive`);
                     }
 
                     btn.removeClass("status-changing");
@@ -660,15 +660,15 @@ function changeFixedPrice(PDID, btn){
 
                 setTimeout(function(){
 
-                    if(response.is_fixedPrice === 1){
+                    if(response.is_fixedPrice === "1"){
                         btn.removeClass("bg-danger")
                            .addClass("bg-primary")
-                           .text("Fixed Price");
+                           .html(`<i class="ti ti-check"></i> Fixed Price`);
                     }
                     else{
                         btn.removeClass("bg-primary")
                            .addClass("bg-danger")
-                           .text("No Fixed Price");
+                           .html(`<i class="ti ti-alert-circle"></i> Non-Fixed Price`);
                     }
 
                     btn.removeClass("status-changing");
@@ -704,15 +704,15 @@ function changeLowStock(PDID, btn){
 
                 setTimeout(function(){
 
-                    if(response.is_lowStock === 1){
+                    if(response.is_lowStock === "1"){
                         btn.removeClass("bg-danger")
                            .addClass("bg-primary")
-                           .text("Is Low Stock");
+                           .html(`<i class="ti ti-check"></i> Is Low Stock`);
                     }
                     else{
                         btn.removeClass("bg-primary")
                            .addClass("bg-danger")
-                           .text("Not Low Stock");
+                           .html(`<i class="ti ti-alert-circle"></i> Non-Low Stock`);
                     }
 
                     btn.removeClass("status-changing");

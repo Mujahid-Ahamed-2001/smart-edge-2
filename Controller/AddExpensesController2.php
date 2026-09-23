@@ -1,11 +1,13 @@
 <?php
 include "../Includes/includes.php";
 $user_id = $_SESSION['user_id'];
+$shop_id = $_SESSION['shop_id'];
 if(!empty($user_id))
 {
     if(isset($_GET['condition']))
     {
         $dbObj   = new DBTransactions();
+        $shopObj = new Shop();
         $response = [];
         $condition = $_GET['condition'];
         if(!empty($condition) && $condition=="new")
@@ -25,71 +27,142 @@ if(!empty($user_id))
             }
             else
             {
-                
-                $sql = "INSERT INTO expensecategory (expense_ctg, expense_ETID, status, is_default, created_by, created_date, modified_by, modified_date) VALUES ('$expense_category', '$expense_type', '$status', '$is_default', '$user_id', NOW(), '$user_id', NOW())";
-                $insert = $dbObj->executeTransaction($sql);
+                // INSERT INTO `expenses`(`EPID`, `EffectiveDate`, `ExpenseAmount`, `ExpenseReason`, `status`, `is_deleted`, `is_default`, `expensecategory_id`, `user_USID`, `shop_SHID`, `counter_id`, `created_date`, `created_by`, `modified_by`, `modified_date`) VALUES ('[value-1]','[value-2]','[value-3]','[value-4]','[value-5]','[value-6]','[value-7]','[value-8]','[value-9]','[value-10]','[value-11]','[value-12]','[value-13]','[value-14]','[value-15]')
+                $CashCounter_CCID=0;
+                if($shopObj->hascounter($shop_id)==1)
+                {
+                    $current_date = date("Y-m-d");
+                    $sql = "SELECT CCID FROM cashcounter WHERE user_USID='$user_id' AND shop_SHID='$shop_id' AND CounterStat = 1 AND CounterDate = '$current_date' ORDER BY CCID DESC LIMIT 1;";
+                    $counterData = $dbObj->getData($sql);
+                    if(count($counterData)==0)
+                    {
+                        $CashCounter_CCID = 0;
+                    }
+                    else
+                    {
+                        $CashCounter_CCID = $counterData[0]['CCID'];
+                    }
+                    
+                }
+                else
+                {
+                    
+                }
+                $table ="expenses";
+                $data = [
+                    "EffectiveDate"=> date("Y-m-d"),
+                    "ExpenseAmount"=> $expense_amount,
+                    "ExpenseReason"=> $expense,
+                    "status"=> $status,
+                    "is_deleted"=> 0,
+                    "is_default"=> $is_default,
+                    "expensecategory_id"=> $expense_cat,
+                    "user_USID"=> $user_id,
+                    "shop_SHID"=> $shop_id,
+                    "counter_id"=> $CashCounter_CCID,
+                    "created_date"=> date("Y-m-d"),
+                    "created_by"=> $user_id,
+                    "modified_by"=> $user_id,
+                    "modified_date"=> date("Y-m-d"),
+
+                ];
+                $insert = $dbObj->insertAndGetId($table, $data);
                 if($insert)
                 {
-                    $response['success'] = "Expense Category created successfully.";
-                    $response = [
-                        "status" => 1,
-                        "message" => "Expense Category created successfully."
+                    // INSERT INTO `expensetransactions`(`ETID`, `expTransactionAmount`, `expTransactionStat`, `expense_id`, `paymethod_id`) VALUES ('[value-1]','[value-2]','[value-3]','[value-4]','[value-5]')
+                    $table2 ="expensetransactions";
+                    $data2 = [
+                        "expTransactionAmount" => $expense_amount,
+                        "expTransactionStat" => 1,
+                        "expense_id" => $insert,
+                        "paymethod_id" => $payment,
                     ];
+                    $insert2 = $dbObj->insertAndGetId($table2, $data2);
+                    if($insert2)
+                    {
+                        $response['success'] = "Expense created successfully.";
+                        $response = [
+                            "status" => 1,
+                            "message" => "Expense created successfully."
+                        ];    
+                    }
+                    else
+                    {
+                        $response = [
+                            "status" => 0,
+                            "message" => "Error: Unable to create Expense transactions."
+                        ];
+                    }
                 }
                 else
                 {
                     $response = [
                         "status" => 0,
-                        "message" => "Error: Unable to create Expense Category."
+                        "message" => "Error: Unable to create Expense."
                     ];
                 }
             }
         }
-        else if(!empty($condition) && $condition=="edit" && isset($_GET['ECID']))
+        else if(!empty($condition) && $condition=="edit" && isset($_GET['EPID']))
         {
-            $ECID = $_GET['ECID'];
-            if(empty($ECID)) {
+            $EPID = $_GET['EPID'];
+            if(empty($EPID)) {
                 $response = [
                     "status" => 0,
-                    "message" => "Error: Expense Category ID is missing."
+                    "message" => "Error: Expense ID is missing."
                 ];
                 echo json_encode($response);
                 exit;
             }
-            $expense_category = $_POST['expense_category'] ?? '';
-            $expense_type = $_POST['expense_type'] ?? '';
             $status = isset($_POST['status']) ? 1 : 0;
             $is_default = isset($_POST['is_default']) ? 1 : 0;
-            if(empty($expense_category))
+            $expense = $_POST['expense'] ?? '';
+            $expense_cat = $_POST['expense_cat'] ?? '';
+            $expense_amount = $_POST['expense_amount'] ?? '';
+            $payment = $_POST['payment'] ?? '';
+            if(empty($expense) || empty($expense_cat) || empty($expense_amount) || empty($payment))
             {
                 $response = [
                     "status" => 0,
-                    "message" => "Expense Category is required."
-                ];
-            }
-            else if(empty($expense_type))
-            {
-                $response = [
-                    "status" => 0,
-                    "message" => "Expense Type is required."
+                    "message" => "Please fill all the required fields."
                 ];
             }
             else
             {
-                $sql = "UPDATE expensecategory SET expense_ctg='$expense_category', expense_ETID='$expense_type', status='$status', is_default='$is_default', modified_by='$user_id', modified_date=NOW() WHERE ECID='$ECID'";
+                $sql = "UPDATE expenses SET ExpenseAmount='$expense_amount', ExpenseReason='$expense', status='$status', is_default='$is_default', expensecategory_id='$expense_cat', modified_by='$user_id', modified_date=NOW() WHERE EPID='$EPID'";
                 $update = $dbObj->executeTransaction($sql);
+                $delete = "DELETE FROM expensetransactions WHERE `expensetransactions`.`expense_id` = '$EPID' ";
+                $delete = $dbObj->executeTransaction($delete);
+                $table2 ="expensetransactions";
+                $data2 = [
+                    "expTransactionAmount" => $expense_amount,
+                    "expTransactionStat" => 1,
+                    "expense_id" => $EPID,
+                    "paymethod_id" => $payment,
+                ];
+                $insert2 = $dbObj->insertAndGetId($table2, $data2);
                 if($update)
                 {
-                    $response = [
-                        "status" => 1,
-                        "message" => "Expense Category updated successfully."
-                    ];
+                    if($insert2)
+                    {
+                        $response = [
+                            "status" => 1,
+                            "message" => "Expense updated successfully."
+                        ];    
+                    }
+                    else
+                    {
+                        $response = [
+                            "status" => 0,
+                            "message" => "Error: Unable to update Expense."
+                        ];
+                    }
                 }
                 else
                 {
                     $response = [
                         "status" => 0,
-                        "message" => "Error: Unable to update Expense Category."
+                        "message" => "Error: Unable to update Expense."
                     ];
                 }
             }
@@ -177,18 +250,20 @@ if(!empty($user_id))
                 ];
             }
         }
-        else if(!empty($condition) && $condition=="fetch" && isset($_GET['ECID']))
+        else if(!empty($condition) && $condition=="fetch" && isset($_GET['EPID']))
         {
-            $ECID = $_GET['ECID'];
-            if(empty($ECID)) {
+            $EPID = $_GET['EPID'];
+            if(empty($EPID)) {
                 $response = [
                     "status" => 0,
-                    "message" => "Error: Expense Category ID is missing."
+                    "message" => "Error: Expense ID is missing."
                 ];
                 echo json_encode($response);
                 exit;
             }
-            $sql = "SELECT * FROM expensecategory WHERE ECID='$ECID' AND is_deleted=0";
+            $sql = "SELECT * FROM expenses e
+            INNER JOIN expensetransactions et ON et.expense_id=e.EPID
+            WHERE e.EPID='$EPID' AND is_deleted=0";
             $data = $dbObj->getData($sql);
             if(!empty($data))
             {
@@ -201,27 +276,116 @@ if(!empty($user_id))
             {
                 $response = [
                     "status" => 0,
-                    "message" => "Error: Expense Category not found."
+                    "message" => "Error: Expense not found."
                 ];
             }
         }
-        else if(!empty($condition) && $condition=="delete" && isset($_GET['ECID']))
+        else if(!empty($condition) && $condition == "delete" && isset($_GET['EPID']))
         {
-            $ECID = $_GET['ECID'];
-            $sql = "UPDATE expensecategory SET is_deleted='1', modified_by='$user_id', modified_date=NOW() WHERE ECID='$ECID'";
-            $update = $dbObj->executeTransaction($sql);
-            if($update)
-            {
-                $response = [
-                    "status" => 1,
-                    "message" => "Expense Category deleted successfully."
-                ];
-            }
-            else
-            {
+            $EPID = (int)$_GET['EPID'];
+            if ($EPID <= 0) {
                 $response = [
                     "status" => 0,
-                    "message" => "Error: Unable to delete Expense Category."
+                    "message" => "Invalid Expense ID."
+                ];
+                echo json_encode($response);
+                exit;
+            }
+
+            /*
+            |--------------------------------------------------------------------------
+            | Check Expense
+            |--------------------------------------------------------------------------
+            */
+
+            $sql = "SELECT EPID, is_default
+                FROM expenses
+                WHERE EPID = '$EPID'
+                AND shop_SHID = '$shop_id'
+                AND is_deleted = 0
+                LIMIT 1
+            ";
+
+            $expenseData = $dbObj->getData($sql);
+
+            if (empty($expenseData)) {
+
+                $response = [
+                    "status" => 0,
+                    "message" => "Expense not found."
+                ];
+
+                echo json_encode($response);
+                exit;
+            }
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | Optional: Protect Default Expense
+            |--------------------------------------------------------------------------
+            */
+
+            if (
+                isset($expenseData[0]['is_default']) &&
+                (int)$expenseData[0]['is_default'] === 1
+            ) {
+
+                $response = [
+                    "status" => 0,
+                    "message" => "Default expenses cannot be deleted."
+                ];
+
+                echo json_encode($response);
+                exit;
+            }
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | Soft Delete Expense
+            |--------------------------------------------------------------------------
+            */
+
+            $sql = "UPDATE expenses
+                SET
+                    is_deleted = 1,
+                    status = 0,
+                    modified_by = '$user_id',
+                    modified_date = NOW()
+                WHERE EPID = '$EPID'
+                AND shop_SHID = '$shop_id'
+            ";
+
+            $update = $dbObj->executeTransaction($sql);
+
+
+            if ($update) {
+
+                /*
+                |--------------------------------------------------------------------------
+                | Disable Related Expense Transactions
+                |--------------------------------------------------------------------------
+                */
+
+                $sqlTransaction = "UPDATE expensetransactions
+                    SET expTransactionStat = 0
+                    WHERE expense_id = '$EPID'
+                ";
+
+                $dbObj->executeTransaction($sqlTransaction);
+
+
+                $response = [
+                    "status" => 1,
+                    "message" => "Expense deleted successfully."
+                ];
+
+            } else {
+
+                $response = [
+                    "status" => 0,
+                    "message" => "Unable to delete expense."
                 ];
             }
         }

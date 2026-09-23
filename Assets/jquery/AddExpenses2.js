@@ -19,12 +19,138 @@ function TableLoading($table, TableName = "Data") {
     `;
     $table.find('tbody').html(loaderHtml);
 }
-function fetchExpenseData()
+function formatSummaryCurrency(amount)
+{
+    return "Rs. " + Number(amount || 0).toLocaleString(
+        "en-LK",
+        {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        }
+    );
+}
+function updateSummaryComparison(
+    selector,
+    percentage,
+    text
+)
+{
+    percentage = Number(percentage) || 0;
+
+    let $element = $(selector);
+
+    let icon = "ti-minus";
+    let className = "summary-neutral";
+
+    if (percentage > 0) {
+
+        icon = "ti-trending-up";
+        className = "summary-increase";
+
+    }
+    else if (percentage < 0) {
+
+        icon = "ti-trending-down";
+        className = "summary-decrease";
+
+    }
+
+
+    $element
+        .removeClass(
+            "summary-increase summary-decrease summary-neutral"
+        )
+        .addClass(className);
+
+
+    $element.html(`
+        <i class="ti ${icon}"></i>
+
+        <span>
+            <strong>${Math.abs(percentage).toFixed(1)}%</strong>
+            ${text}
+        </span>
+    `);
+}
+function fetchExpenseSummary()
+{
+    return $.ajax({
+
+        url: "../AJAX/Expense/fetchExpenseSummary.php",
+        method: "POST",
+        dataType: "json",
+
+        success: function(response) {
+
+            if (Number(response.status) !== 1) {
+
+                toastr.error(
+                    response.message || "Unable to load expense summary.",
+                    "Error"
+                );
+
+                return;
+            }
+
+            let data = response.data;
+
+            $("#summaryTotalExpenses").text(
+                formatSummaryCurrency(data.total.amount)
+            );
+
+            $("#summaryMonthExpenses").text(
+                formatSummaryCurrency(data.month.amount)
+            );
+
+            $("#summaryWeekExpenses").text(
+                formatSummaryCurrency(data.week.amount)
+            );
+
+            $("#summaryTodayExpenses").text(
+                formatSummaryCurrency(data.today.amount)
+            );
+
+            updateSummaryComparison(
+                "#summaryMonthComparison",
+                data.month.percentage,
+                "from last month"
+            );
+
+            updateSummaryComparison(
+                "#summaryWeekComparison",
+                data.week.percentage,
+                "from last week"
+            );
+
+            updateSummaryComparison(
+                "#summaryTodayComparison",
+                data.today.percentage,
+                "from yesterday"
+            );
+        },
+
+        error: function(xhr, status, error) {
+
+            console.log(xhr.responseText);
+
+            toastr.error(
+                "Unable to load expense summary.",
+                "Error"
+            );
+        }
+
+    });
+}
+function fetchExpenseData(startDate = "", endDate = "")
 {
     return $.ajax({
         url: '../AJAX/Expense/fetchExpenseData.php',
         method: 'post',
-        data: { ShopID: ShopID },
+        data: {
+            ShopID: ShopID,
+            start_date: startDate,
+            end_date: endDate
+        },
         dataType: 'json',
         beforeSend: function() {
             TableLoading($table, "Expenses");
@@ -49,6 +175,7 @@ function fetchExpenseData()
                 var EPID = row.EPID; 
                 var EffectiveDate = row.EffectiveDate;
                 var ExpenseReason = row.ExpenseReason;
+                var ExpenseAmount = row.ExpenseAmount;
                 var expense_cat = row.expense_cat;
                 var is_default = row.is_default;
                 var status = row.status;
@@ -95,7 +222,7 @@ function fetchExpenseData()
                 }
                 if(delete_access==1)
                 {
-                    btn +=`<button class="btn-action btn-delete delete-epid" data-epid="${EPID}">
+                    btn +=`<button type="button" class="btn-action btn-delete delete-epid" data-epid="${EPID}">
                                 <i class="ti ti-trash"></i>
                             </button>`;
                 }
@@ -110,6 +237,9 @@ function fetchExpenseData()
                         </td>
                         <td>
                             ${expense_cat}
+                        </td>
+                        <td>
+                            Rs. ${ExpenseAmount}
                         </td>
                         <td>
                             ${EffectiveDate}
@@ -153,301 +283,785 @@ function fetchExpenseData()
         }
     });
 }
-$(function () {
-    /*==================================================
-    Sample expense overview data
-    Later, replace this object with your AJAX response.
-    ==================================================*/
-    const expenseOverviewData = {
-        labels: [
-            "Rent",
-            "Salaries",
-            "Utilities",
-            "Office Supplies",
-            "Marketing",
-            "Transportation",
-            "Others"
-        ],
-        values: [
-            150000,
-            120000,
-            65000,
-            45500,
-            38750,
-            28250,
-            37250
-        ],
-        colors: [
-            "#5F3DE8",
-            "#446ED1",
-            "#72B3A7",
-            "#F4A11A",
-            "#648BEA",
-            "#ED6EB2",
-            "#C8C7DF"
-        ]
-    };
-    const overviewTotal = expenseOverviewData.values.reduce(
-        function (total, value) {
-            return total + value;
+/*
+|--------------------------------------------------------------------------
+| Expense Charts
+|--------------------------------------------------------------------------
+*/
+
+let expenseOverviewChart = null;
+let expenseTrendChart = null;
+
+
+/*
+|--------------------------------------------------------------------------
+| Currency Formatter
+|--------------------------------------------------------------------------
+*/
+
+function formatExpenseCurrency(amount, decimalPlaces = 2)
+{
+    return "Rs. " + Number(amount || 0).toLocaleString(
+        "en-LK",
+        {
+            minimumFractionDigits: decimalPlaces,
+            maximumFractionDigits: decimalPlaces
+        }
+    );
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| Chart Colors
+|--------------------------------------------------------------------------
+*/
+
+const expenseChartColors = [
+    "#5F3DE8",
+    "#446ED1",
+    "#72B3A7",
+    "#F4A11A",
+    "#648BEA",
+    "#ED6EB2",
+    "#C8C7DF",
+    "#8A6FF0",
+    "#48A9A6",
+    "#E76F51",
+    "#2A9D8F",
+    "#E9C46A"
+];
+
+
+/*
+|--------------------------------------------------------------------------
+| Fetch Expense Charts
+|--------------------------------------------------------------------------
+*/
+
+function fetchExpenseCharts(startDate = "", endDate = "")
+{
+    return $.ajax({
+
+        url: "../AJAX/Expense/fetchExpenseChartData.php",
+
+        method: "POST",
+
+        dataType: "json",
+
+        data: {
+            start_date: startDate,
+            end_date: endDate
+        },
+
+        success: function(response) {
+
+            if (Number(response.status) !== 1) {
+
+                toastr.error(
+                    response.message || "Unable to load expense charts.",
+                    "Error"
+                );
+
+                return;
+            }
+
+            let data = response.data;
+
+            renderExpenseOverviewChart(
+                data.overview || []
+            );
+
+            renderExpenseTrendChart(
+                data.trend || []
+            );
+
+        },
+
+        error: function(xhr, status, error) {
+
+            console.log(
+                "Expense charts AJAX error:",
+                status,
+                error
+            );
+
+            console.log(
+                xhr.responseText
+            );
+
+            toastr.error(
+                "Unable to load expense charts.",
+                "Error"
+            );
+        }
+
+    });
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| Expenses Overview Donut Chart
+|--------------------------------------------------------------------------
+*/
+
+function renderExpenseOverviewChart(rows)
+{
+    let labels = [];
+    let values = [];
+
+    $.each(rows, function(index, row) {
+
+        labels.push(
+            row.label || "Uncategorized"
+        );
+
+        values.push(
+            Number(row.value || 0)
+        );
+
+    });
+
+
+    let total = values.reduce(
+        function(sum, value) {
+            return sum + value;
         },
         0
     );
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Update center total
+    |--------------------------------------------------------------------------
+    */
+
     $("#expenseOverviewTotal").text(
-        formatExpenseCurrency(overviewTotal, 0)
+        formatExpenseCurrency(total, 0)
     );
-    createExpenseLegend(expenseOverviewData, overviewTotal);
-    /*==================================================
-    Expenses Donut Chart
-    ==================================================*/
-    const $overviewCanvas = $("#expenseOverviewChart");
-    if ($overviewCanvas.length) {
-        const overviewCanvas = $overviewCanvas[0];
-        new Chart(overviewCanvas, {
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Update legend
+    |--------------------------------------------------------------------------
+    */
+
+    createExpenseLegend(
+        labels,
+        values,
+        total
+    );
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Canvas
+    |--------------------------------------------------------------------------
+    */
+
+    const canvas = document.getElementById(
+        "expenseOverviewChart"
+    );
+
+    if (!canvas) {
+        return;
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Destroy previous chart
+    |--------------------------------------------------------------------------
+    */
+
+    if (expenseOverviewChart) {
+
+        expenseOverviewChart.destroy();
+        expenseOverviewChart = null;
+
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Empty Data
+    |--------------------------------------------------------------------------
+    */
+
+    if (values.length === 0) {
+
+        labels = ["No Expenses"];
+        values = [1];
+
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Create Chart
+    |--------------------------------------------------------------------------
+    */
+
+    expenseOverviewChart = new Chart(
+        canvas,
+        {
             type: "doughnut",
+
             data: {
-                labels: expenseOverviewData.labels,
+
+                labels: labels,
+
                 datasets: [{
-                    data: expenseOverviewData.values,
-                    backgroundColor: expenseOverviewData.colors,
+                    data: values,
+
+                    backgroundColor:
+                        rows.length > 0
+                            ? labels.map(
+                                function(label, index) {
+                                    return expenseChartColors[
+                                        index % expenseChartColors.length
+                                    ];
+                                }
+                            )
+                            : ["#e9ecef"],
+
                     borderColor: "#ffffff",
+
                     borderWidth: 2,
+
                     hoverBorderWidth: 2,
+
                     hoverOffset: 5
                 }]
             },
+
             options: {
+
                 responsive: true,
+
                 maintainAspectRatio: false,
+
                 cutout: "62%",
+
                 animation: {
-                    duration: 900,
+                    duration: 700,
                     easing: "easeOutQuart"
                 },
+
                 plugins: {
+
                     legend: {
                         display: false
                     },
+
                     tooltip: {
+
+                        enabled: rows.length > 0,
+
                         displayColors: true,
+
                         backgroundColor: "#202638",
+
                         titleColor: "#ffffff",
+
                         bodyColor: "#ffffff",
+
                         padding: 12,
+
                         cornerRadius: 8,
+
                         callbacks: {
-                            label: function (context) {
-                                const value = Number(context.raw || 0);
-                                const percentage = overviewTotal > 0
-                                    ? ((value / overviewTotal) * 100).toFixed(1)
-                                    : 0;
-                                return " " +
+
+                            label: function(context) {
+
+                                let value =
+                                    Number(context.raw || 0);
+
+                                let percentage =
+                                    total > 0
+                                        ? (
+                                            (value / total) * 100
+                                        ).toFixed(1)
+                                        : 0;
+
+                                return (
+                                    " " +
                                     context.label +
                                     ": " +
-                                    formatExpenseCurrency(value, 2) +
-                                    " (" + percentage + "%)";
-                            }
-                        }
-                    }
-                }
-            }
-        });
-    }
-    /*==================================================
-    Sample expenses trend data
-    ==================================================*/
-    const expenseTrendData = {
-        labels: [
-            "May 01",
-            "May 03",
-            "May 05",
-            "May 07",
-            "May 09",
-            "May 11",
-            "May 13",
-            "May 15",
-            "May 17",
-            "May 19",
-            "May 21",
-            "May 23",
-            "May 25",
-            "May 27",
-            "May 29",
-            "May 31"
-        ],
-        values: [
-            25000,
-            45500,
-            28000,
-            30000,
-            24500,
-            40500,
-            35000,
-            54000,
-            52000,
-            72450,
-            62500,
-            58000,
-            61000,
-            56000,
-            64500,
-            79000
-        ]
-    };
-    /*==================================================
-    Expenses Trend Chart
-    ==================================================*/
-    const $trendCanvas = $("#expenseTrendChart");
-    if ($trendCanvas.length) {
-        const trendCanvas = $trendCanvas[0];
-        const trendContext = trendCanvas.getContext("2d");
-        const trendGradient = trendContext.createLinearGradient(0, 0, 0, 280);
-        trendGradient.addColorStop(0, "rgba(103, 72, 246, 0.24)");
-        trendGradient.addColorStop(0.65, "rgba(103, 72, 246, 0.06)");
-        trendGradient.addColorStop(1, "rgba(103, 72, 246, 0)");
-        new Chart(trendCanvas, {
-            type: "line",
-            data: {
-                labels: expenseTrendData.labels,
-                datasets: [{
-                    label: "Expenses",
-                    data: expenseTrendData.values,
-                    borderColor: "#6748F6",
-                    backgroundColor: trendGradient,
-                    borderWidth: 2.5,
-                    fill: true,
-                    tension: 0.4,
-                    pointRadius: 0,
-                    pointHoverRadius: 5,
-                    pointHoverBackgroundColor: "#ffffff",
-                    pointHoverBorderColor: "#6748F6",
-                    pointHoverBorderWidth: 2
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                interaction: {
-                    mode: "index",
-                    intersect: false
-                },
-                plugins: {
-                    legend: {
-                        display: false
-                    },
-                    tooltip: {
-                        backgroundColor: "#ffffff",
-                        titleColor: "#697386",
-                        bodyColor: "#252c3d",
-                        borderColor: "#e3e5ed",
-                        borderWidth: 1,
-                        padding: 12,
-                        cornerRadius: 8,
-                        displayColors: false,
-                        callbacks: {
-                            label: function (context) {
-                                return formatExpenseCurrency(
-                                    Number(context.raw || 0),
-                                    2
+                                    formatExpenseCurrency(
+                                        value,
+                                        2
+                                    ) +
+                                    " (" +
+                                    percentage +
+                                    "%)"
                                 );
                             }
                         }
                     }
+                }
+            }
+        }
+    );
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| Expense Legend
+|--------------------------------------------------------------------------
+*/
+
+function createExpenseLegend(
+    labels,
+    values,
+    total
+)
+{
+    const $legendContainer =
+        $("#expenseChartLegend");
+
+    if (!$legendContainer.length) {
+        return;
+    }
+
+    $legendContainer.empty();
+
+
+    if (!labels.length) {
+
+        $legendContainer.html(`
+            <div class="text-muted">
+                No expense data available.
+            </div>
+        `);
+
+        return;
+    }
+
+
+    $.each(
+        labels,
+        function(index, label) {
+
+            let value =
+                Number(values[index] || 0);
+
+            let percentage =
+                total > 0
+                    ? (
+                        (value / total) * 100
+                    ).toFixed(1)
+                    : "0.0";
+
+
+            let color =
+                expenseChartColors[
+                    index % expenseChartColors.length
+                ];
+
+
+            let $legendItem =
+                $("<div>", {
+                    class: "expense-legend-item"
+                }).html(`
+
+                    <span
+                        class="expense-legend-color"
+                        style="background:${color}"
+                    ></span>
+
+                    <span
+                        class="expense-legend-name"
+                    >
+                        ${label}
+                    </span>
+
+                    <span
+                        class="expense-legend-amount"
+                    >
+                        ${formatExpenseCurrency(
+                            value,
+                            2
+                        )}
+                    </span>
+
+                    <span
+                        class="expense-legend-percentage"
+                    >
+                        ${percentage}%
+                    </span>
+
+                `);
+
+
+            $legendContainer.append(
+                $legendItem
+            );
+
+        }
+    );
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| Expense Trend Chart
+|--------------------------------------------------------------------------
+*/
+
+function renderExpenseTrendChart(rows)
+{
+    let labels = [];
+    let values = [];
+
+
+    $.each(
+        rows,
+        function(index, row) {
+
+            labels.push(
+                formatExpenseChartDate(
+                    row.date
+                )
+            );
+
+            values.push(
+                Number(
+                    row.value || 0
+                )
+            );
+
+        }
+    );
+
+
+    const canvas =
+        document.getElementById(
+            "expenseTrendChart"
+        );
+
+    if (!canvas) {
+        return;
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Destroy Previous Chart
+    |--------------------------------------------------------------------------
+    */
+
+    if (expenseTrendChart) {
+
+        expenseTrendChart.destroy();
+        expenseTrendChart = null;
+
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Gradient
+    |--------------------------------------------------------------------------
+    */
+
+    const context =
+        canvas.getContext("2d");
+
+    const gradient =
+        context.createLinearGradient(
+            0,
+            0,
+            0,
+            280
+        );
+
+    gradient.addColorStop(
+        0,
+        "rgba(103, 72, 246, 0.24)"
+    );
+
+    gradient.addColorStop(
+        0.65,
+        "rgba(103, 72, 246, 0.06)"
+    );
+
+    gradient.addColorStop(
+        1,
+        "rgba(103, 72, 246, 0)"
+    );
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Create Trend Chart
+    |--------------------------------------------------------------------------
+    */
+
+    expenseTrendChart =
+        new Chart(
+            canvas,
+            {
+
+                type: "line",
+
+                data: {
+
+                    labels: labels,
+
+                    datasets: [{
+                        label: "Expenses",
+
+                        data: values,
+
+                        borderColor:
+                            "#6748F6",
+
+                        backgroundColor:
+                            gradient,
+
+                        borderWidth:
+                            2.5,
+
+                        fill:
+                            true,
+
+                        tension:
+                            0.4,
+
+                        pointRadius:
+                            values.length <= 15
+                                ? 3
+                                : 0,
+
+                        pointHoverRadius:
+                            5,
+
+                        pointHoverBackgroundColor:
+                            "#ffffff",
+
+                        pointHoverBorderColor:
+                            "#6748F6",
+
+                        pointHoverBorderWidth:
+                            2
+                    }]
                 },
-                scales: {
-                    x: {
-                        border: {
+
+                options: {
+
+                    responsive:
+                        true,
+
+                    maintainAspectRatio:
+                        false,
+
+                    interaction: {
+                        mode: "index",
+                        intersect: false
+                    },
+
+                    plugins: {
+
+                        legend: {
                             display: false
                         },
-                        grid: {
-                            display: false
-                        },
-                        ticks: {
-                            color: "#7e889a",
-                            font: {
-                                size: 11
-                            },
-                            maxRotation: 0,
-                            callback: function (value, index) {
-                                return index % 3 === 0
-                                    ? this.getLabelForValue(value)
-                                    : "";
+
+                        tooltip: {
+
+                            backgroundColor:
+                                "#ffffff",
+
+                            titleColor:
+                                "#697386",
+
+                            bodyColor:
+                                "#252c3d",
+
+                            borderColor:
+                                "#e3e5ed",
+
+                            borderWidth:
+                                1,
+
+                            padding:
+                                12,
+
+                            cornerRadius:
+                                8,
+
+                            displayColors:
+                                false,
+
+                            callbacks: {
+
+                                label:
+                                    function(context) {
+
+                                        return formatExpenseCurrency(
+                                            Number(
+                                                context.raw || 0
+                                            ),
+                                            2
+                                        );
+
+                                    }
                             }
                         }
                     },
-                    y: {
-                        beginAtZero: true,
-                        suggestedMax: 100000,
-                        border: {
-                            display: false
-                        },
-                        grid: {
-                            color: "#edf0f5",
-                            drawTicks: false
-                        },
-                        ticks: {
-                            stepSize: 25000,
-                            padding: 10,
-                            color: "#7e889a",
-                            font: {
-                                size: 11
+
+                    scales: {
+
+                        x: {
+
+                            border: {
+                                display: false
                             },
-                            callback: function (value) {
-                                if (value === 0) {
-                                    return "0";
-                                }
-                                return (value / 1000) + "K";
+
+                            grid: {
+                                display: false
+                            },
+
+                            ticks: {
+
+                                color:
+                                    "#7e889a",
+
+                                font: {
+                                    size: 11
+                                },
+
+                                maxRotation:
+                                    0,
+
+                                autoSkip:
+                                    true,
+
+                                maxTicksLimit:
+                                    10
+                            }
+                        },
+
+                        y: {
+
+                            beginAtZero:
+                                true,
+
+                            border: {
+                                display:
+                                    false
+                            },
+
+                            grid: {
+                                color:
+                                    "#edf0f5",
+
+                                drawTicks:
+                                    false
+                            },
+
+                            ticks: {
+
+                                padding:
+                                    10,
+
+                                color:
+                                    "#7e889a",
+
+                                font: {
+                                    size: 11
+                                },
+
+                                callback:
+                                    function(value) {
+
+                                        return formatCompactNumber(
+                                            value
+                                        );
+
+                                    }
                             }
                         }
                     }
                 }
             }
-        });
+        );
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| Chart Date Formatter
+|--------------------------------------------------------------------------
+*/
+
+function formatExpenseChartDate(dateString)
+{
+    if (!dateString) {
+        return "";
     }
-    /*==================================================
-    Generate custom overview legend
-    ==================================================*/
-    function createExpenseLegend(data, total) {
-        const $legendContainer = $("#expenseChartLegend");
-        if (!$legendContainer.length) {
-            return;
+
+    let parts =
+        dateString.split("-");
+
+    if (parts.length !== 3) {
+        return dateString;
+    }
+
+    let date =
+        new Date(
+            Number(parts[0]),
+            Number(parts[1]) - 1,
+            Number(parts[2])
+        );
+
+
+    return date.toLocaleDateString(
+        "en-US",
+        {
+            month: "short",
+            day: "2-digit"
         }
-        $legendContainer.empty();
-        $.each(data.labels, function (index, label) {
-            const value = Number(data.values[index] || 0);
-            const percentage = total > 0
-                ? ((value / total) * 100).toFixed(1)
-                : "0.0";
-            const $legendItem = $("<div>", {
-                class: "expense-legend-item"
-            }).html(`
-                <span
-                    class="expense-legend-color"
-                    style="background:${data.colors[index]}"
-                ></span>
-                <span class="expense-legend-name">
-                    ${label}
-                </span>
-                <span class="expense-legend-amount">
-                    ${formatExpenseCurrency(value, 2)}
-                </span>
-                <span class="expense-legend-percentage">
-                    ${percentage}%
-                </span>
-            `);
-            $legendContainer.append($legendItem);
-        });
+    );
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| Compact Number
+|--------------------------------------------------------------------------
+*/
+
+function formatCompactNumber(value)
+{
+    value = Number(value || 0);
+
+    if (value >= 1000000) {
+
+        return (
+            (value / 1000000)
+                .toFixed(1)
+                .replace(".0", "") +
+            "M"
+        );
     }
-    /*==================================================
-    Currency formatter
-    ==================================================*/
-    function formatExpenseCurrency(amount, decimalPlaces = 2) {
-        return "Rs. " + Number(amount).toLocaleString("en-LK", {
-            minimumFractionDigits: decimalPlaces,
-            maximumFractionDigits: decimalPlaces
-        });
+
+    if (value >= 1000) {
+
+        return (
+            (value / 1000)
+                .toFixed(1)
+                .replace(".0", "") +
+            "K"
+        );
     }
-});
+
+    return value;
+}
 function openModal(url, title = "Modal"){
   $("#modal").iziModal('destroy');
   $("#modal").iziModal({
@@ -468,6 +1082,292 @@ function openModal(url, title = "Modal"){
 }
 $(document).ready(function(){
     fetchExpenseData();
+    fetchExpenseSummary();
+    fetchExpenseCharts("", "");
+    $(document).on("click", ".delete-epid", function () {
+
+        let EPID = $(this).data("epid");
+
+        if (!EPID) {
+
+            toastr.error(
+                "Invalid Expense ID.",
+                "Error"
+            );
+
+            return;
+        }
+
+
+        if (!confirm("Are you sure you want to delete this expense?")) {
+            return;
+        }
+
+
+        let $btn = $(this);
+        let originalHtml = $btn.html();
+
+
+        $.ajax({
+
+            url:"../Controller/AddExpensesController2.php" + "?condition=delete&EPID=" + encodeURIComponent(EPID),
+
+            method: "POST",
+
+            dataType: "json",
+
+            data: {
+                // body can remain empty;
+                // EPID/condition are sent in query string below
+            },
+
+            beforeSend: function () {
+
+                $btn
+                    .prop("disabled", true)
+                    .html(
+                        '<span class="spinner-border spinner-border-sm"></span>'
+                    );
+
+            },
+
+            success: function (response) {
+
+                if (Number(response.status) === 1) {
+
+                    toastr.success(
+                        response.message,
+                        "Success"
+                    );
+
+
+                    /*
+                    |--------------------------------------------------------------------------
+                    | Refresh Current Table Filter
+                    |--------------------------------------------------------------------------
+                    */
+
+                    let startDate =
+                        $("#expense_start_date").val();
+
+                    let endDate =
+                        $("#expense_end_date").val();
+
+
+                    fetchExpenseData(
+                        startDate,
+                        endDate
+                    );
+
+
+                    /*
+                    |--------------------------------------------------------------------------
+                    | Refresh Summary
+                    |--------------------------------------------------------------------------
+                    */
+
+                    fetchExpenseSummary();
+
+
+                    /*
+                    |--------------------------------------------------------------------------
+                    | Refresh Charts
+                    |--------------------------------------------------------------------------
+                    */
+
+                    fetchExpenseCharts(
+                        startDate,
+                        endDate
+                    );
+
+                } else {
+
+                    toastr.error(
+                        response.message || "Unable to delete expense.",
+                        "Error"
+                    );
+                }
+
+            },
+
+            error: function (xhr, status, error) {
+
+                console.log(
+                    "Delete Expense Error:",
+                    status,
+                    error
+                );
+
+                console.log(
+                    xhr.responseText
+                );
+
+                toastr.error(
+                    "An error occurred while deleting the expense.",
+                    "Error"
+                );
+
+            },
+
+            complete: function () {
+
+                $btn
+                    .prop("disabled", false)
+                    .html(originalHtml);
+
+            }
+
+        });
+
+    });
+    $("#refreshExpenseDashboard").on(
+        "click",
+        function ()
+        {
+
+            let $btn =
+                $(this);
+
+            let $icon =
+                $btn.find("i");
+
+            let startDate =
+                $("#expense_start_date").val();
+
+            let endDate =
+                $("#expense_end_date").val();
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | Both Empty = Show Everything
+            |--------------------------------------------------------------------------
+            */
+
+            if (!startDate && !endDate) {
+
+                startDate = "";
+                endDate = "";
+
+            }
+
+            /*
+            |--------------------------------------------------------------------------
+            | Only One Date Entered
+            |--------------------------------------------------------------------------
+            */
+
+            else if (!startDate || !endDate) {
+
+                toastr.warning(
+                    "Please select both start and end dates.",
+                    "Warning"
+                );
+
+                return;
+            }
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | Invalid Range
+            |--------------------------------------------------------------------------
+            */
+
+            if (
+                startDate &&
+                endDate &&
+                startDate > endDate
+            ) {
+
+                toastr.warning(
+                    "Start date cannot be after end date.",
+                    "Warning"
+                );
+
+                return;
+            }
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | Loading
+            |--------------------------------------------------------------------------
+            */
+
+            $btn.prop(
+                "disabled",
+                true
+            );
+
+            $icon.css({
+                animation:
+                    "spin 0.8s linear infinite",
+
+                display:
+                    "inline-block"
+            });
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | Refresh Table + Charts
+            |--------------------------------------------------------------------------
+            |
+            | IMPORTANT:
+            | Summary is intentionally NOT called here.
+            |
+            */
+
+            $.when(
+
+                fetchExpenseData(
+                    startDate,
+                    endDate
+                ),
+
+                fetchExpenseCharts(
+                    startDate,
+                    endDate
+                )
+
+            ).always(
+                function ()
+                {
+
+                    $btn.prop(
+                        "disabled",
+                        false
+                    );
+
+                    $icon.css(
+                        "animation",
+                        "none"
+                    );
+
+                }
+            );
+
+        }
+    );
+    $("#expense_start_date").on("change", function () {
+
+        $("#expense_end_date").attr(
+            "min",
+            $(this).val()
+        );
+
+    });
+
+
+    $("#expense_end_date").on("change", function () {
+
+        $("#expense_start_date").attr(
+            "max",
+            $(this).val()
+        );
+
+    });
     $("#headerCollapse2").trigger("click");
     $(document).on('click', '.open-modal', function (e) {
       e.preventDefault();

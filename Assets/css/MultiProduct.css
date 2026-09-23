@@ -1,0 +1,962 @@
+/*=====================================================
+Card
+=====================================================*/
+
+.main-card{
+    margin-top: 25px;
+    background:#fff;
+
+    border-radius:20px;
+
+    overflow:hidden;
+
+    border:1px solid #ECEEF6;
+
+    box-shadow:
+        0 12px 40px rgba(0,0,0,.05);
+
+    transition:.35s;
+    /* padding: 0 25px 25px; */
+}
+.default_badge, .status_badge{
+
+    cursor:pointer;
+    transition: 1s all;
+
+}
+.default_badge i, .status_badge i{
+
+    cursor:pointer;
+    transition: 1s all;
+
+}
+
+.main-card:hover{
+
+    transform:translateY(-3px);
+
+    box-shadow:
+        0 0 60px rgba(92,70,255,.10);
+
+}
+
+.main-card-header{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    padding:28px 32px;
+
+}
+
+.main-title{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:18px;
+
+}
+
+.main-icon{
+
+    width:62px;
+
+    height:62px;
+
+    border-radius:18px;
+
+    background:linear-gradient(135deg,#8B5CF6,#5B3DF5);
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    color:#fff;
+
+    font-size:26px;
+
+    box-shadow:
+        0 10px 25px rgba(91,61,245,.25);
+
+}
+
+.main-title h3{
+
+    margin:0;
+
+    font-size:27px;
+
+    font-weight:700;
+
+}
+
+.main-title p{
+
+    margin:6px 0 0;
+
+    color:#7C8698;
+
+    font-size:15px;
+
+}
+
+
+/*=====================================================
+Divider
+=====================================================*/
+
+.card-divider{
+
+    height:1px;
+
+    background:#EEF1F7;
+
+}
+/*=====================================================
+PRODUCT ENTRY GRID
+=====================================================*/
+
+.product-grid-card {
+    overflow: hidden;
+    border-radius: 18px;
+    background: #ffffff;
+}
+
+
+/*=====================================================
+GRID HEADER
+=====================================================*/
+
+.product-grid-topbar {
+
+    min-height: 74px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 16px 22px;
+
+    background: #ffffff;
+
+    border-bottom: 1px solid #e9edf5;
+}
+
+
+.product-grid-title {
+
+    display: flex;
+    align-items: center;
+
+    gap: 12px;
+}
+
+
+.grid-title-icon {
+
+    width: 38px;
+    height: 38px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: #f1edff;
+
+    color: #6547f5;
+
+    border-radius: 10px;
+
+    font-size: 20px;
+}
+
+
+.product-grid-title h5 {
+
+    margin: 0;
+
+    font-size: 16px;
+
+    font-weight: 700;
+
+    color: #192342;
+}
+
+
+.product-grid-title p {
+
+    margin: 3px 0 0;
+
+    font-size: 12px;
+
+    color: #8b94a7;
+}
+
+
+.product-grid-count {
+
+    font-size: 12px;
+
+    color: #8992a5;
+}
+
+
+.product-grid-count strong {
+
+    color: #313e5c;
+
+    font-weight: 600;
+}
+
+
+
+/*=====================================================
+TABLE WRAPPER
+=====================================================*/
+
+.product-table-responsive {
+
+    width: 100%;
+
+    overflow-x: auto;
+
+    background: #ffffff;
+}
+
+
+
+/*=====================================================
+TABLE
+=====================================================*/
+
+.main-table {
+
+    width: 100%;
+
+    min-width: 1200px;
+
+    margin: 0 !important;
+
+    border-collapse: separate;
+
+    border-spacing: 0;
+
+    background: #ffffff;
+}
+
+
+
+/*=====================================================
+TABLE HEADER
+=====================================================*/
+
+.main-table thead th {
+
+    height: 46px;
+
+    padding: 0 10px;
+
+    vertical-align: middle;
+
+    background: #f8f9fc;
+
+    color: #293653;
+
+    font-size: 12px;
+
+    font-weight: 700;
+
+    white-space: nowrap;
+
+    border-top: 0;
+
+    border-bottom: 1px solid #dfe4ed;
+
+    border-right: 1px solid #e8ecf2;
+}
+
+
+.main-table thead th:first-child {
+
+    padding-left: 16px;
+}
+
+
+.main-table thead th:last-child {
+
+    border-right: 0;
+}
+
+
+
+/*=====================================================
+TABLE BODY
+=====================================================*/
+
+.main-table tbody td {
+
+    height: 57px;
+
+    padding: 7px 9px;
+
+    vertical-align: middle;
+
+    background: #ffffff;
+
+    border-bottom: 1px solid #ebeff5;
+
+    border-right: 1px solid #ebeff5;
+}
+
+
+.main-table tbody td:last-child {
+
+    border-right: 0;
+}
+
+
+.main-table tbody tr:last-child td {
+
+    border-bottom: 0;
+}
+
+
+.main-table tbody tr {
+
+    transition: .2s ease;
+}
+
+
+.main-table tbody tr:hover td {
+
+    background: #fbfbff;
+}
+
+
+
+/*=====================================================
+ROW NUMBER
+=====================================================*/
+
+.row-number {
+
+    text-align: center;
+
+    font-size: 12px;
+
+    font-weight: 600;
+
+    color: #46516a;
+}
+
+
+
+/*=====================================================
+INPUTS
+=====================================================*/
+
+.main-table input.form-control,
+.main-table select.form-select {
+
+    width: 100%;
+
+    height: 38px;
+
+    margin: 0;
+
+    padding: 7px 10px;
+
+    background: #ffffff;
+
+    border: 1px solid #d9e0ea;
+
+    border-radius: 7px;
+
+    color: #34425f;
+
+    font-size: 12px;
+
+    font-weight: 500;
+
+    outline: none;
+
+    box-shadow:
+        0 1px 2px rgba(15, 23, 42, .03);
+
+    transition:
+        border .2s ease,
+        box-shadow .2s ease;
+}
+
+
+.main-table input.form-control:hover,
+.main-table select.form-select:hover {
+
+    border-color: #c4ccda;
+}
+
+
+.main-table input.form-control:focus,
+.main-table select.form-select:focus {
+
+    border-color: #7257f5;
+
+    box-shadow:
+        0 0 0 3px rgba(114, 87, 245, .10);
+}
+
+
+
+/*=====================================================
+NUMBER INPUT
+=====================================================*/
+
+.main-table input[type="number"] {
+
+    text-align: left;
+}
+
+
+
+/*=====================================================
+COLUMN WIDTHS
+=====================================================*/
+
+.col-number {
+
+    width: 48px;
+    min-width: 48px;
+
+    text-align: center;
+}
+
+
+.col-barcode {
+
+    width: 175px;
+    min-width: 175px;
+}
+
+
+.col-product {
+
+    width: 230px;
+    min-width: 230px;
+}
+
+
+.col-category {
+
+    width: 160px;
+    min-width: 160px;
+}
+
+
+.col-cost {
+
+    width: 125px;
+    min-width: 125px;
+}
+
+
+.col-price {
+
+    width: 150px;
+    min-width: 150px;
+}
+
+
+.col-qty {
+
+    width: 125px;
+    min-width: 125px;
+}
+
+
+.col-stock {
+
+    width: 115px;
+    min-width: 115px;
+}
+
+
+.col-status {
+
+    width: 120px;
+    min-width: 120px;
+}
+
+
+
+/*=====================================================
+STATUS
+=====================================================*/
+
+.grid-status {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 7px;
+
+    white-space: nowrap;
+
+    font-size: 12px;
+
+    font-weight: 600;
+}
+
+
+
+/* Saved */
+
+.grid-status.saved {
+
+    color: #14934b;
+}
+
+
+.grid-status.saved i {
+
+    width: 18px;
+    height: 18px;
+
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: #14934b;
+
+    color: #ffffff;
+
+    font-size: 11px;
+}
+
+
+
+/* Pending */
+
+.grid-status.pending {
+
+    color: #dc9212;
+}
+
+
+
+/* Duplicate */
+
+.grid-status.duplicate {
+
+    color: #e2273a;
+}
+
+
+.grid-status.duplicate i {
+
+    color: #e2273a;
+
+    font-size: 18px;
+}
+
+
+
+/*=====================================================
+DUPLICATE / ERROR ROW
+=====================================================*/
+
+.main-table tbody tr.row-error td {
+
+    background: #fff3f4;
+}
+
+
+.main-table tbody tr.row-error:hover td {
+
+    background: #ffedef;
+}
+
+
+.main-table tbody tr.row-error input.form-control,
+.main-table tbody tr.row-error select.form-select {
+
+    border-color: #ffcbd0;
+}
+
+
+
+/*=====================================================
+SCROLLBAR
+=====================================================*/
+
+.product-table-responsive::-webkit-scrollbar {
+
+    height: 7px;
+}
+
+
+.product-table-responsive::-webkit-scrollbar-track {
+
+    background: #f5f6f9;
+}
+
+
+.product-table-responsive::-webkit-scrollbar-thumb {
+
+    background: #ccd2dd;
+
+    border-radius: 20px;
+}
+
+
+.product-table-responsive::-webkit-scrollbar-thumb:hover {
+
+    background: #b3bbc9;
+}
+
+
+
+/*=====================================================
+RESPONSIVE
+=====================================================*/
+
+@media (max-width: 768px) {
+
+    .product-grid-topbar {
+
+        padding: 14px 16px;
+    }
+
+
+    .product-grid-title p {
+
+        display: none;
+    }
+
+
+    .main-table {
+
+        margin: 0 !important;
+    }
+
+}
+
+
+@media (max-width: 576px) {
+
+    .product-grid-topbar {
+
+        gap: 15px;
+    }
+
+
+    .product-grid-title h5 {
+
+        font-size: 14px;
+    }
+
+
+    .product-grid-count {
+
+        font-size: 11px;
+    }
+
+}
+
+@keyframes spin{
+    0%{
+        transform: rotate(0deg);
+    }
+    100%{
+        transform: rotate(360deg);
+    }
+}
+.row-saved.updating {
+    opacity: 0.6;
+    pointer-events: none;
+}
+/*=====================================================
+Action Buttons
+=====================================================*/
+
+.btn-action{
+
+    width:42px;
+
+    height:42px;
+
+    border:none;
+
+    border-radius:12px;
+
+    margin-right:8px;
+
+    transition:.30s;
+
+    display:inline-flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    font-size:18px;
+
+}
+
+.btn-edit{
+
+    background:#EEF2FF;
+
+    color:#4F46E5;
+
+}
+
+.btn-edit:hover{
+
+    background:#4F46E5;
+
+    color:#fff;
+
+    transform:translateY(-2px);
+
+}
+
+.btn-delete{
+
+    background:#FFECEC;
+
+    color:#E74C3C;
+
+}
+
+.btn-delete:hover{
+
+    background:#E74C3C;
+
+    color:#fff;
+
+    transform:translateY(-2px);
+
+}
+
+
+/*=====================================================
+Footer
+=====================================================*/
+
+.dashboard-footer{
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    gap:18px;
+
+    margin-top:45px;
+
+    color:#79839B;
+
+    font-size:14px;
+
+}
+
+.footer-icon{
+
+    width:48px;
+
+    height:48px;
+
+    border-radius:50%;
+
+    background:#F3EEFF;
+
+    color:#6C63FF;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    font-size:22px;
+
+}
+
+.dashboard-footer a{
+
+    color:#6C63FF;
+
+    text-decoration:none;
+
+    font-weight:600;
+
+}
+
+.dashboard-footer a:hover{
+
+    text-decoration:underline;
+
+}
+
+
+/*=====================================================
+Utility
+=====================================================*/
+
+.rounded-20{
+
+    border-radius:20px;
+
+}
+
+.shadow-soft{
+
+    box-shadow:0 12px 35px rgba(0,0,0,.05);
+
+}
+
+.cursor-pointer{
+
+    cursor:pointer;
+
+}
+
+.transition{
+
+    transition:.30s;
+
+}
+
+
+/*=====================================================
+Animations
+=====================================================*/
+
+@keyframes fadeUp{
+
+    from{
+
+        opacity:0;
+
+        transform:translateY(18px);
+
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:translateY(0);
+
+    }
+
+}
+
+.main-card{
+
+    animation:fadeUp .45s ease;
+
+}
+
+
+/*=====================================================
+Responsive
+=====================================================*/
+
+@media (max-width:991px){
+
+    .main-card-header{
+
+        flex-direction:column;
+
+        align-items:flex-start;
+
+        gap:20px;
+
+    }
+
+    .btn-add-expense{
+
+        width:100%;
+
+        justify-content:center;
+
+    }
+
+}
+
+@media (max-width:768px){
+
+    .main-card-header{
+
+        padding:22px;
+
+    }
+
+    
+
+    .main-title h3{
+
+        font-size:22px;
+
+    }
+
+    .main-title p{
+
+        font-size:14px;
+
+    }
+
+    .main-icon{
+
+        width:55px;
+
+        height:55px;
+
+        font-size:22px;
+
+    }
+
+}
+
+@media (max-width:576px){
+
+    .page-breadcrumb{
+
+        flex-wrap:wrap;
+
+    }
+
+    .main-table thead th,
+
+    .main-table tbody td{
+
+        padding:15px;
+
+        font-size:13px;
+
+    }
+
+    .btn-action{
+
+        width:38px;
+
+        height:38px;
+
+        font-size:16px;
+
+    }
+
+}

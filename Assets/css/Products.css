@@ -1,0 +1,189 @@
+.head-dashboard-head {
+    margin-bottom: 24px;
+    animation: fadeUp 0.45s ease;
+}
+
+.head-head-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    margin-bottom: 24px;
+}
+
+.head-heading h1 {
+    margin: 0 0 8px;
+    color: #171d2d;
+    font-size: 27px;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.head-breadcrumb {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    color: #7c8698;
+    font-size: 13px;
+}
+
+.head-breadcrumb a {
+    color: #7c8698;
+    text-decoration: none;
+    transition: color 0.25s ease;
+}
+
+.head-breadcrumb a:hover {
+    color: #6047ed;
+}
+
+.head-breadcrumb i {
+    color: #abb2bf;
+    font-size: 12px;
+}
+
+.head-breadcrumb span {
+    color: #687386;
+}
+
+.head-head-actions {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.products-table{
+
+    margin:0;
+
+    border:1px solid #EEF1F6;
+
+    border-radius:18px;
+
+    overflow:hidden;
+
+}
+
+.products-table thead{
+
+    background:#FAFBFE;
+
+}
+
+.products-table thead th{
+
+    border:none;
+
+    font-weight:700;
+
+    color:#4A5568;
+
+}
+
+.products-table tbody td{
+
+    /* padding:20px; */
+
+    vertical-align:middle;
+
+    border-top:1px solid #EEF1F6;
+
+}
+
+.products-table tbody tr{
+
+    transition:.25s;
+
+}
+
+.products-table tbody tr:hover{
+
+    background:#FBFBFF;
+
+}
+
+/*=====================================================
+Badges
+=====================================================*/
+
+.badge{
+
+    padding:8px 14px;
+
+    border-radius:50px;
+
+    display:inline-flex;
+
+    align-items:center;
+
+    gap:8px;
+
+    font-size:13px;
+
+    font-weight:600;
+
+}
+
+.badge.bg-primary{
+
+    color:#0F9D58 !important;
+
+    background:#E8FFF1 !important;
+
+}
+
+.badge-warning{
+
+    background:#FFF8E6 !important;
+
+    color:#F39C12 !important;
+
+}
+
+.badge.bg-danger{
+
+    background:#FFECEC !important;
+
+    color:#E74C3C !important;
+
+}
+
+@media (max-width: 991px) {
+    .head-head-row {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .head-head-actions {
+        width: 100%;
+    }
+}
+@media (max-width: 767px) {
+    .head-heading h1 {
+        font-size: 23px;
+    }
+
+    .head-head-actions {
+        align-items: stretch;
+        flex-direction: column;
+    }
+}
+@media (max-width: 768px) {
+    .products-table{
+
+        /* margin:15px; */
+
+    }
+}
+@media (max-width: 576px) {
+    .products-table thead th,
+
+    .products-table tbody td{
+
+        /* padding:15px; */
+
+        font-size:13px;
+
+    }
+}

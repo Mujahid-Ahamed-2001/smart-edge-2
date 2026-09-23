@@ -25,6 +25,7 @@ include '../Includes/authcheck.php';
             cursor: pointer;
         }
     </style>
+    <link rel="stylesheet" href="../Assets/css/Products.css">
 </head>
 <body>
     <div id="modal"></div>
@@ -65,6 +66,57 @@ include '../Includes/authcheck.php';
                 ?>
                 <!--  Header End -->
                 <div class="container-fluid">
+                    <section class="head-dashboard-head">
+
+                        <div class="head-head-row">
+
+                            <div class="head-heading">
+                                <h1>Products Dashboard <a href="javascript:void(0)" id="refresh"> <i class="ti ti-reload"></i> </a></h1> 
+
+                                <div class="head-breadcrumb">
+                                    <a href="javascript:void(0)">Home</a>
+                                    <i class="ti ti-chevron-right"></i>
+
+                                    <a href="javascript:void(0)">Products</a>
+                                    <i class="ti ti-chevron-right"></i>
+
+                                    <span>Dashboard</span>
+                                </div>
+                            </div>
+                            <div class="head-head-actions">
+                                <?php
+                                    if ($userType == 1 || $create == 1)
+                                    {
+                                    ?>
+                                        <!-- Buttons -->
+                                        <div class="d-flex flex-wrap gap-2 justify-content-start justify-content-md-end">
+
+                                            <a href="../View/modals/addproducts.php?condition=new&ref=product"
+                                            class="btn btn-primary rounded-pill shadow-btn open-modal"
+                                            title="Add Product">
+                                                <small>Add Products</small>
+                                            </a>
+
+                                            <a href="../Public/MultiProduct.php"
+                                            class="btn btn-primary rounded-pill shadow-btn"
+                                            title="Add Multi Product"
+                                            target="_blank">
+                                                <small>Add Multi Products</small>
+                                            </a>
+
+                                            <a href="upload_product.php"
+                                            class="btn btn-primary rounded-pill shadow-btn"
+                                            id="import">
+                                                <small>CSV File Upload</small>
+                                            </a>
+
+                                        </div>
+                                    <?php
+                                    }
+                                    ?>
+                            </div>
+                        </div>
+                    </section>
                     <?php $today = date('d-m-Y');?>
                     <?php $shop = $shopObj->getOneShop($shop_id);?>
                     <?php $query = isset($_GET['query']) && !empty($_GET['query']) ? $_GET['query'] : '';?>
@@ -210,32 +262,14 @@ include '../Includes/authcheck.php';
                             </div>
                         </div>
                         <div class="card col-md-12">
-                            <div class="card-header">
-                                <h3 class="card-title fw-semibold p-2">
-                                Products <a href="javascript:void(0)" id="refresh"><i class="ti ti-reload"></i></a>
-                                <?php 
-                                if($userType==1 || $create==1)
-                                {
-                                    ?>
-                                    <a href="../View/modals/addproducts.php?condition=new&ref=product" class="btn btn-primary rounded-pill float-end shadow-btn open-modal" title="Add Product">
-                                        <small>
-                                            Add Products
-                                        </small>
-                                    </a>
-                                    <a href="upload_product.php" class="btn btn-primary rounded-pill float-end me-3 shadow-btn" id="import"><small>CSV File Upload</small></a>
-                                    <?php
-                                }
-                                ?>
-                                </h3>
-                            </div>
                             <div class="card-body">
                                 <div class="table-responsive">
-                                    <table class="table table-hover" id="tbl_products">
+                                    <table class="table table-hover products-table" id="tbl_products">
                                         <thead>
                                             <th>
                                                 <input type="checkbox" name="allCheck" id="allCheck" class="form-checkbox allCheck">
                                             </th>
-                                            <th>
+                                            <th width="400">
                                                 Item Name
                                             </th>
                                             <th>

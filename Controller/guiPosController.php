@@ -100,7 +100,8 @@ if(isset($_GET["cash"]) || isset($_POST["cash"]))
         }
         if($shopObj->hascounter($shop_id)==1)
         {
-            $sql = "SELECT * FROM cashcounter WHERE user_USID = ".$user_USID." AND shop_SHID=".$shop_id." AND CounterStat = 1;";
+            $current_date = date("Y-m-d");
+            $sql = "SELECT CCID FROM cashcounter WHERE user_USID='$user_USID' AND shop_SHID='$shop_id' AND CounterStat = 1 AND CounterDate = '$current_date' ORDER BY CCID DESC LIMIT 1;";
             $counterData = $dbObj->getData($sql);
             if(count($counterData)==0)
             {
@@ -210,7 +211,8 @@ if(isset($_GET["cash"]) || isset($_POST["cash"]))
         {
             if($shopObj->hascounter($shop_id)==1)
             {
-                $sql = "SELECT * FROM cashcounter WHERE user_USID = ".$user_USID." AND shop_SHID=".$shop_id." AND CounterStat = 1;";
+                $current_date = date("Y-m-d");
+                $sql = "SELECT CCID FROM cashcounter WHERE user_USID='$user_USID' AND shop_SHID='$shop_id' AND CounterStat = 1 AND CounterDate = '$current_date' ORDER BY CCID DESC LIMIT 1;";
                 $counterData = $dbObj->getData($sql);
                 $CashCounter_CCID = $counterData[0]['CCID'];
             }
@@ -553,7 +555,8 @@ if(isset($_GET["invoiceHold"]))
         $Salesmans_SLID=$_POST["salesmanid"];
         if($shopObj->hascounter($shop_id)==1)
         {
-            $sql = "SELECT * FROM cashcounter WHERE user_USID = ".$user_USID." AND shop_SHID=".$shop_id." AND CounterStat = 1;";
+            $current_date = date("Y-m-d");
+            $sql = "SELECT CCID FROM cashcounter WHERE user_USID='$user_USID' AND shop_SHID='$shop_id' AND CounterStat = 1 AND CounterDate = '$current_date' ORDER BY CCID DESC LIMIT 1;";
             $counterData = $dbObj->getData($sql);
             $CashCounter_CCID = $counterData[0]['CCID'];
         }
@@ -764,7 +767,8 @@ if(isset($_GET["btn_submit_invoice"]) || isset($_GET["btn_submit"]))
         }
         if($shopObj->hascounter($shop_id)==1)
         {
-            $sql = "SELECT * FROM cashcounter WHERE user_USID = ".$user_USID." AND shop_SHID=".$shop_id." AND CounterStat = 1;";
+            $current_date = date("Y-m-d");
+            $sql = "SELECT CCID FROM cashcounter WHERE user_USID='$user_USID' AND shop_SHID='$shop_id' AND CounterStat = 1 AND CounterDate = '$current_date' ORDER BY CCID DESC LIMIT 1;";
             $counterData = $dbObj->getData($sql);
             if(count($counterData)==0)
             {
@@ -874,7 +878,8 @@ if(isset($_GET["btn_submit_invoice"]) || isset($_GET["btn_submit"]))
         {
             if($shopObj->hascounter($shop_id)==1)
             {
-                $sql = "SELECT * FROM cashcounter WHERE user_USID = ".$user_USID." AND shop_SHID=".$shop_id." AND CounterStat = 1;";
+                $current_date = date("Y-m-d");
+                $sql = "SELECT CCID FROM cashcounter WHERE user_USID='$user_USID' AND shop_SHID='$shop_id' AND CounterStat = 1 AND CounterDate = '$current_date' ORDER BY CCID DESC LIMIT 1;";
                 $counterData = $dbObj->getData($sql);
                 $CashCounter_CCID = $counterData[0]['CCID'];
             }

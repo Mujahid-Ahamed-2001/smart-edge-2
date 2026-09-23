@@ -567,10 +567,6 @@ else
     <!-- footer End  -->
 
     <script src="../Assets/jquery/adjustment.js"></script>
-    <script src="../Assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="../Assets/js/sidebarmenu.js"></script>
-    <script src="../Assets/js/app.min.js"></script>
-    <script src="../Assets/libs/simplebar/dist/simplebar.js"></script>
 
 </body>
 </html>
