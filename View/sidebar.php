@@ -386,6 +386,14 @@ if($userType!=1)
               <span class="hide-menu">Reports</span>
             </a>
             <ul aria-expanded="false" class="collapse first-level">
+              <li class="sidebar-item">
+                <a href="../Reports/daily-summary.php" class="sidebar-link sidebar-link2">
+                  <div class="round-16 d-flex align-items-center justify-content-center">
+                    <i class="ti ti-circle"></i>
+                  </div>
+                  <span class="hide-menu">Daily Summary</span>
+                </a>
+              </li>
                 <!--Master Reports-->              
                 <li class="sidebar-item">
                   <a href="javascript:void(0)" class="sidebar-link has-arrow sidebar-link2">

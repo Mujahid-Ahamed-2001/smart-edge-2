@@ -1,0 +1,2823 @@
+/* ==========================================
+   Daily Business Summary
+========================================== */
+
+.daily-summary-stats {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 16px;
+    width: 100%;
+    margin-top: 20px;
+}
+
+
+/* ==========================================
+   Statistic Card
+========================================== */
+
+.summary-stat-card {
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+
+    min-height: 130px;
+    padding: 20px;
+
+    background: #ffffff;
+    border: 1px solid #e7edf4;
+    border-radius: 12px;
+
+    box-shadow:
+        0 1px 2px rgba(16, 24, 40, 0.02),
+        0 4px 12px rgba(16, 24, 40, 0.03);
+
+    overflow: hidden;
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+
+.summary-stat-card:hover {
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 4px 8px rgba(16, 24, 40, 0.04),
+        0 10px 20px rgba(16, 24, 40, 0.06);
+}
+
+
+/* ==========================================
+   Left Colour Indicator
+========================================== */
+
+.summary-stat-card::before {
+    content: "";
+    position: absolute;
+
+    left: 0;
+    top: 0;
+    bottom: 0;
+
+    width: 3px;
+
+    border-radius: 12px 0 0 12px;
+}
+
+
+.revenue-card::before {
+    background: #16b364;
+}
+
+
+.profit-card::before {
+    background: #7f56d9;
+}
+
+
+.expense-card::before {
+    background: #f04438;
+}
+
+
+.net-profit-card::before {
+    background: #2e90fa;
+}
+
+
+/* ==========================================
+   Icon
+========================================== */
+
+.summary-stat-icon {
+    width: 52px;
+    height: 52px;
+
+    min-width: 52px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 10px;
+
+    font-size: 25px;
+}
+
+
+.revenue-icon {
+    color: #ffffff;
+    background: linear-gradient(
+        135deg,
+        #12b76a,
+        #32d583
+    );
+}
+
+
+.profit-icon {
+    color: #ffffff;
+    background: linear-gradient(
+        135deg,
+        #7f56d9,
+        #9e77ed
+    );
+}
+
+
+.expense-icon {
+    color: #ffffff;
+    background: linear-gradient(
+        135deg,
+        #f04438,
+        #f97066
+    );
+}
+
+
+.net-profit-icon {
+    color: #ffffff;
+    background: linear-gradient(
+        135deg,
+        #1570ef,
+        #53b1fd
+    );
+}
+
+
+/* ==========================================
+   Content
+========================================== */
+
+.summary-stat-content {
+    flex: 1;
+    min-width: 0;
+}
+
+
+.summary-stat-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 10px;
+
+    margin-bottom: 5px;
+}
+
+
+.summary-stat-title {
+    color: #344054;
+
+    font-size: 14px;
+    font-weight: 600;
+
+    white-space: nowrap;
+}
+
+
+/* ==========================================
+   Percentage
+========================================== */
+
+.summary-stat-change {
+    display: inline-flex;
+    align-items: center;
+
+    gap: 2px;
+
+    font-size: 13px;
+    font-weight: 700;
+
+    white-space: nowrap;
+}
+
+
+.summary-stat-change i {
+    font-size: 15px;
+}
+
+
+.summary-stat-change.positive {
+    color: #12b76a;
+}
+
+
+.summary-stat-change.negative {
+    color: #f04438;
+}
+
+
+/* ==========================================
+   Main Amount
+========================================== */
+
+.summary-stat-value {
+    margin: 3px 0 4px 0;
+
+    color: #101828;
+
+    font-size: 26px;
+    font-weight: 700;
+
+    line-height: 1.25;
+
+    letter-spacing: -0.5px;
+}
+
+
+/* ==========================================
+   Description
+========================================== */
+
+.summary-stat-description {
+    margin: 0;
+
+    color: #667085;
+
+    font-size: 13px;
+    font-weight: 400;
+
+    line-height: 1.5;
+}
+
+
+/* ==========================================
+   Responsive
+========================================== */
+
+@media (max-width: 1350px) {
+
+    .daily-summary-stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+}
+
+
+@media (max-width: 767px) {
+
+    .daily-summary-stats {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .summary-stat-card {
+        min-height: auto;
+        padding: 16px;
+    }
+
+    .summary-stat-value {
+        font-size: 23px;
+    }
+
+}
+
+
+@media (max-width: 420px) {
+
+    .summary-stat-icon {
+        width: 46px;
+        height: 46px;
+
+        min-width: 46px;
+
+        font-size: 22px;
+    }
+
+    .summary-stat-card {
+        gap: 12px;
+    }
+
+    .summary-stat-value {
+        font-size: 21px;
+    }
+
+    .summary-stat-title {
+        font-size: 13px;
+    }
+
+    .summary-stat-change {
+        font-size: 12px;
+    }
+
+}
+
+/* =========================================================
+   SALES PERFORMANCE + INVOICE SUMMARY
+========================================================= */
+
+.daily-sales-section {
+    display: grid;
+
+    grid-template-columns:
+        minmax(0, 2.2fr)
+        minmax(270px, 1fr);
+
+    gap: 16px;
+
+    width: 100%;
+
+    margin-top: 16px;
+}
+
+
+/* =========================================================
+   COMMON REPORT CARD
+========================================================= */
+
+.daily-report-card {
+
+    background: #ffffff;
+
+    border: 1px solid #e7edf4;
+
+    border-radius: 12px;
+
+    box-shadow:
+        0 1px 2px rgba(16, 24, 40, 0.02),
+        0 4px 12px rgba(16, 24, 40, 0.03);
+
+    overflow: hidden;
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.daily-report-card-header {
+
+    display: flex;
+
+    align-items: flex-start;
+
+    justify-content: space-between;
+
+    gap: 15px;
+
+    padding: 20px 22px 5px 22px;
+}
+
+
+.report-title-area {
+
+    display: flex;
+
+    align-items: flex-start;
+
+    gap: 12px;
+}
+
+
+.report-title-icon {
+
+    width: 34px;
+    height: 34px;
+
+    min-width: 34px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 7px;
+
+    font-size: 24px;
+}
+
+
+.report-title-icon.blue {
+
+    color: #2e90fa;
+
+    background: #eff8ff;
+}
+
+
+.report-title-area h3 {
+
+    margin: 0;
+
+    color: #101828;
+
+    font-size: 18px;
+
+    font-weight: 700;
+
+    line-height: 1.3;
+}
+
+
+.report-title-area p {
+
+    margin: 2px 0 0 0;
+
+    color: #667085;
+
+    font-size: 13px;
+
+    font-weight: 400;
+}
+
+
+/* =========================================================
+   AVERAGE BILL
+========================================================= */
+
+.average-bill-box {
+
+    min-width: 135px;
+
+    padding: 9px 15px;
+
+    text-align: center;
+
+    border-radius: 8px;
+
+    background: #eff6ff;
+}
+
+
+.average-bill-label {
+
+    display: block;
+
+    margin-bottom: 1px;
+
+    color: #667085;
+
+    font-size: 12px;
+
+    font-weight: 500;
+}
+
+
+.average-bill-box strong {
+
+    color: #155eef;
+
+    font-size: 19px;
+
+    font-weight: 700;
+
+    line-height: 1.2;
+}
+
+
+/* =========================================================
+   CHART
+========================================================= */
+
+.sales-chart-container {
+
+    position: relative;
+
+    width: 100%;
+
+    height: 250px;
+
+    padding:
+
+        12px
+        20px
+        18px
+        16px;
+}
+
+
+/* =========================================================
+   INVOICE SUMMARY
+========================================================= */
+
+.invoice-summary-card {
+
+    min-width: 0;
+}
+
+
+.invoice-summary-card .daily-report-card-header {
+
+    padding-bottom: 10px;
+}
+
+
+.invoice-summary-list {
+
+    padding:
+        0
+        22px
+        8px
+        22px;
+}
+
+
+.invoice-summary-row {
+
+    min-height: 48px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 15px;
+
+    border-bottom: 1px solid #eaecf0;
+}
+
+
+.invoice-summary-row span {
+
+    color: #344054;
+
+    font-size: 14px;
+
+    font-weight: 500;
+}
+
+
+.invoice-summary-row strong {
+
+    font-size: 18px;
+
+    font-weight: 700;
+}
+
+
+.invoice-summary-row.no-border {
+
+    border-bottom: none;
+}
+
+
+/* =========================================================
+   INVOICE SUMMARY COLORS
+========================================================= */
+
+.summary-blue {
+    color: #155eef;
+}
+
+
+.summary-green {
+    color: #12b76a;
+}
+
+
+.summary-orange {
+    color: #f79009;
+}
+
+
+.summary-purple {
+    color: #6938ef;
+}
+
+
+.summary-dark {
+    color: #101828;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 1100px) {
+
+    .daily-sales-section {
+
+        grid-template-columns: 1fr;
+    }
+
+
+    .sales-chart-container {
+
+        height: 280px;
+    }
+
+}
+
+
+@media (max-width: 767px) {
+
+    .daily-report-card-header {
+
+        padding: 16px;
+
+        flex-wrap: wrap;
+    }
+
+
+    .average-bill-box {
+
+        min-width: 110px;
+    }
+
+
+    .sales-chart-container {
+
+        height: 240px;
+
+        padding:
+
+            10px
+            10px
+            15px
+            5px;
+    }
+
+
+    .invoice-summary-list {
+
+        padding:
+
+            0
+            16px
+            8px
+            16px;
+    }
+
+}
+
+
+@media (max-width: 480px) {
+
+    .daily-report-card-header {
+
+        align-items: flex-start;
+    }
+
+
+    .report-title-area h3 {
+
+        font-size: 16px;
+    }
+
+
+    .average-bill-box {
+
+        width: 100%;
+
+        text-align: left;
+    }
+
+
+    .sales-chart-container {
+
+        height: 220px;
+    }
+
+}
+/* =========================================================
+   PAYMENT / CASH / INVENTORY SECTION
+========================================================= */
+
+.daily-operations-section {
+
+    display: grid;
+
+    gap: 16px;
+
+    width: 100%;
+
+    margin-top: 16px;
+}
+
+
+/* When Cash Counter is enabled */
+
+.daily-operations-section.cash-counter-enabled {
+
+    grid-template-columns:
+        minmax(320px, 1.25fr)
+        minmax(250px, 0.9fr)
+        minmax(280px, 1fr);
+}
+
+
+/* When Cash Counter is disabled */
+
+.daily-operations-section.cash-counter-disabled {
+
+    grid-template-columns:
+        minmax(320px, 1.3fr)
+        minmax(300px, 1fr);
+}
+
+
+/* =========================================================
+   CARD HEADER
+========================================================= */
+
+.operation-card-header {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 15px;
+
+    padding: 18px 20px 14px 20px;
+}
+
+
+.operation-title {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    min-width: 0;
+}
+
+
+.operation-title h3 {
+
+    margin: 0;
+
+    color: #101828;
+
+    font-size: 16px;
+
+    font-weight: 700;
+
+    line-height: 1.3;
+}
+
+
+/* =========================================================
+   HEADER ICON
+========================================================= */
+
+.operation-title-icon {
+
+    width: 30px;
+    height: 30px;
+
+    min-width: 30px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 7px;
+
+    font-size: 20px;
+}
+
+
+.payment-icon {
+
+    color: #1570ef;
+
+    background: #eff8ff;
+}
+
+
+.cash-icon {
+
+    color: #12b76a;
+
+    background: #ecfdf3;
+}
+
+
+.inventory-icon {
+
+    color: #1570ef;
+
+    background: #eff8ff;
+}
+
+
+/* =========================================================
+   PAYMENT COLLECTION
+========================================================= */
+
+.payment-total {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 5px;
+
+    white-space: nowrap;
+}
+
+
+.payment-total span {
+
+    color: #667085;
+
+    font-size: 12px;
+
+    font-weight: 500;
+}
+
+
+.payment-total strong {
+
+    color: #155eef;
+
+    font-size: 13px;
+
+    font-weight: 700;
+}
+
+
+.payment-collection-list {
+
+    padding:
+        0
+        20px
+        18px
+        20px;
+}
+
+
+.payment-collection-item {
+
+    margin-bottom: 15px;
+}
+
+
+.payment-collection-item:last-child {
+
+    margin-bottom: 0;
+}
+
+
+.payment-row-header {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 10px;
+
+    margin-bottom: 6px;
+}
+
+
+.payment-name {
+
+    color: #344054;
+
+    font-size: 13px;
+
+    font-weight: 500;
+}
+
+
+.payment-amount {
+
+    color: #101828;
+
+    font-size: 13px;
+
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   PAYMENT PROGRESS BAR
+========================================================= */
+
+.payment-progress-wrapper {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+}
+
+
+.payment-progress {
+
+    position: relative;
+
+    flex: 1;
+
+    height: 10px;
+
+    background: #e4eaf1;
+
+    border-radius: 20px;
+
+    overflow: hidden;
+}
+
+
+.payment-progress-bar {
+
+    height: 100%;
+
+    border-radius: 20px;
+
+    transition: width 0.4s ease;
+}
+
+
+.payment-percentage {
+
+    width: 38px;
+
+    text-align: right;
+
+    color: #475467;
+
+    font-size: 12px;
+
+    font-weight: 600;
+}
+
+
+/* =========================================================
+   PAYMENT BAR COLORS
+========================================================= */
+
+.payment-bar-green {
+
+    background: linear-gradient(
+        90deg,
+        #12b76a,
+        #32d583
+    );
+}
+
+
+.payment-bar-blue {
+
+    background: linear-gradient(
+        90deg,
+        #2e90fa,
+        #53b1fd
+    );
+}
+
+
+.payment-bar-purple {
+
+    background: linear-gradient(
+        90deg,
+        #6938ef,
+        #9e77ed
+    );
+}
+
+
+.payment-bar-orange {
+
+    background: linear-gradient(
+        90deg,
+        #f79009,
+        #fdb022
+    );
+}
+
+
+.payment-bar-red {
+
+    background: linear-gradient(
+        90deg,
+        #f04438,
+        #f97066
+    );
+}
+
+
+/* =========================================================
+   CASH COUNTER
+========================================================= */
+
+.cash-counter-list {
+
+    padding:
+        0
+        20px
+        18px
+        20px;
+}
+
+
+.cash-counter-row {
+
+    min-height: 38px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 10px;
+
+    border-bottom: 1px solid #eaecf0;
+}
+
+
+.cash-counter-row span {
+
+    color: #344054;
+
+    font-size: 12px;
+
+    font-weight: 500;
+}
+
+
+.cash-counter-row strong {
+
+    color: #344054;
+
+    font-size: 12px;
+
+    font-weight: 600;
+}
+
+
+/* =========================================================
+   CASH HIGHLIGHT ROWS
+========================================================= */
+
+.cash-highlight {
+
+    min-height: 48px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 10px;
+
+    padding: 0 10px;
+
+    margin-top: 7px;
+
+    border-radius: 7px;
+}
+
+
+.cash-highlight span {
+
+    font-size: 13px;
+
+    font-weight: 700;
+}
+
+
+.cash-highlight strong {
+
+    font-size: 15px;
+
+    font-weight: 700;
+}
+
+
+.system-cash {
+
+    color: #155eef;
+
+    background: #eff6ff;
+}
+
+
+.physical-closing {
+
+    color: #101828;
+
+    background: #ecfdf3;
+}
+
+
+.cash-difference-row {
+
+    margin-top: 4px;
+
+    border-bottom: none;
+}
+
+
+/* =========================================================
+   CASH DIFFERENCE
+========================================================= */
+
+.cash-difference {
+
+    font-weight: 700 !important;
+}
+
+
+.cash-difference.negative {
+
+    color: #f04438 !important;
+}
+
+
+.cash-difference.positive {
+
+    color: #12b76a !important;
+}
+
+
+.cash-difference.equal {
+
+    color: #667085 !important;
+}
+
+
+/* =========================================================
+   INVENTORY ACTIVITY
+========================================================= */
+
+.inventory-stat-grid {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 10px;
+
+    padding:
+        0
+        20px;
+}
+
+
+.inventory-stat-box {
+
+    min-height: 76px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: center;
+
+    padding: 12px 14px;
+
+    border-radius: 8px;
+}
+
+
+.inventory-stat-box span {
+
+    display: block;
+
+    margin-bottom: 4px;
+
+    color: #475467;
+
+    font-size: 11px;
+
+    font-weight: 500;
+}
+
+
+.inventory-stat-box strong {
+
+    font-size: 20px;
+
+    font-weight: 700;
+
+    line-height: 1.2;
+}
+
+
+/* =========================================================
+   INVENTORY COLORS
+========================================================= */
+
+.inventory-green {
+
+    background: #ecfdf3;
+}
+
+
+.inventory-green strong {
+
+    color: #12b76a;
+}
+
+
+.inventory-blue {
+
+    background: #eff8ff;
+}
+
+
+.inventory-blue strong {
+
+    color: #1570ef;
+}
+
+
+.inventory-orange {
+
+    background: #fff6ed;
+}
+
+
+.inventory-orange strong {
+
+    color: #f79009;
+}
+
+
+.inventory-red {
+
+    background: #fff1f3;
+}
+
+
+.inventory-red strong {
+
+    color: #e31b54;
+}
+
+
+/* =========================================================
+   STOCK VALUE
+========================================================= */
+
+.inventory-stock-value {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 11px;
+
+    margin: 14px 20px 18px 20px;
+
+    padding-top: 13px;
+
+    border-top: 1px solid #eaecf0;
+}
+
+
+.stock-value-icon {
+
+    width: 34px;
+    height: 34px;
+
+    min-width: 34px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    color: #667085;
+
+    font-size: 23px;
+}
+
+
+.inventory-stock-value span {
+
+    display: block;
+
+    color: #667085;
+
+    font-size: 11px;
+
+    font-weight: 500;
+}
+
+
+.inventory-stock-value strong {
+
+    display: block;
+
+    margin-top: 1px;
+
+    color: #101828;
+
+    font-size: 16px;
+
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 1250px) {
+
+    .daily-operations-section.cash-counter-enabled {
+
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+
+
+    .inventory-activity-card {
+
+        grid-column: span 2;
+    }
+
+
+    .inventory-stat-grid {
+
+        grid-template-columns:
+            repeat(4, minmax(0, 1fr));
+    }
+
+}
+
+
+@media (max-width: 900px) {
+
+    .daily-operations-section.cash-counter-enabled,
+    .daily-operations-section.cash-counter-disabled {
+
+        grid-template-columns: 1fr;
+    }
+
+
+    .inventory-activity-card {
+
+        grid-column: auto;
+    }
+
+
+    .inventory-stat-grid {
+
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+
+}
+
+
+@media (max-width: 480px) {
+
+    .operation-card-header {
+
+        padding:
+            16px
+            15px
+            12px
+            15px;
+    }
+
+
+    .payment-collection-list,
+    .cash-counter-list {
+
+        padding-left: 15px;
+
+        padding-right: 15px;
+    }
+
+
+    .inventory-stat-grid {
+
+        padding-left: 15px;
+
+        padding-right: 15px;
+    }
+
+
+    .inventory-stock-value {
+
+        margin-left: 15px;
+
+        margin-right: 15px;
+    }
+
+
+    .payment-total {
+
+        flex-direction: column;
+
+        align-items: flex-end;
+
+        gap: 0;
+    }
+
+}
+/* =========================================================
+   DAILY BOTTOM SUMMARY SECTION
+========================================================= */
+
+.daily-bottom-summary-section {
+
+    display: grid;
+
+    grid-template-columns:
+        minmax(0, 1.55fr)
+        minmax(280px, 1fr)
+        minmax(210px, 0.7fr);
+
+    gap: 16px;
+
+    width: 100%;
+
+    margin-top: 16px;
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.bottom-summary-header {
+
+    display: flex;
+
+    align-items: flex-start;
+
+    justify-content: space-between;
+
+    gap: 15px;
+
+    padding:
+        18px
+        20px
+        12px
+        20px;
+}
+
+
+.bottom-summary-title {
+
+    display: flex;
+
+    align-items: flex-start;
+
+    gap: 10px;
+
+    min-width: 0;
+}
+
+
+.bottom-summary-title h3 {
+
+    margin: 0;
+
+    color: #101828;
+
+    font-size: 16px;
+
+    font-weight: 700;
+
+    line-height: 1.3;
+}
+
+
+.bottom-summary-title p {
+
+    margin: 2px 0 0 0;
+
+    color: #667085;
+
+    font-size: 12px;
+
+    font-weight: 400;
+}
+
+
+/* =========================================================
+   ICONS
+========================================================= */
+
+.bottom-summary-icon {
+
+    width: 30px;
+    height: 30px;
+
+    min-width: 30px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 7px;
+
+    font-size: 20px;
+}
+
+
+.products-icon {
+
+    color: #2e90fa;
+
+    background: #eff8ff;
+}
+
+
+.customer-icon {
+
+    color: #1570ef;
+
+    background: #eff8ff;
+}
+
+
+/* =========================================================
+   VIEW ALL
+========================================================= */
+
+.view-all-link {
+
+    color: #1570ef;
+
+    font-size: 12px;
+
+    font-weight: 600;
+
+    text-decoration: none;
+
+    white-space: nowrap;
+}
+
+
+.view-all-link:hover {
+
+    color: #004eeb;
+
+    text-decoration: none;
+}
+
+
+/* =========================================================
+   TOP PRODUCTS TABLE
+========================================================= */
+
+.top-products-table-wrapper {
+
+    width: 100%;
+
+    padding:
+        0
+        14px
+        16px
+        14px;
+
+    overflow-x: auto;
+}
+
+
+.top-products-table {
+
+    width: 100%;
+
+    min-width: 520px;
+
+    border-collapse: collapse;
+
+    font-size: 12px;
+}
+
+
+.top-products-table thead {
+
+    background: #f2f4f7;
+}
+
+
+.top-products-table thead th {
+
+    padding:
+        9px
+        8px;
+
+    color: #475467;
+
+    font-size: 11px;
+
+    font-weight: 600;
+
+    border-bottom:
+        1px solid
+        #eaecf0;
+
+    white-space: nowrap;
+}
+
+
+.top-products-table thead th:first-child {
+
+    border-radius:
+        6px
+        0
+        0
+        6px;
+}
+
+
+.top-products-table thead th:last-child {
+
+    border-radius:
+        0
+        6px
+        6px
+        0;
+}
+
+
+.top-products-table tbody td {
+
+    padding:
+        9px
+        8px;
+
+    color: #344054;
+
+    border-bottom:
+        1px solid
+        #eaecf0;
+
+    vertical-align: middle;
+
+    white-space: nowrap;
+}
+
+
+.top-products-table tbody tr:last-child td {
+
+    border-bottom: none;
+}
+
+
+.top-products-table tbody tr:hover {
+
+    background: #f9fafb;
+}
+
+
+.top-products-table .product-name {
+
+    color: #101828;
+
+    font-weight: 500;
+}
+
+
+.product-number-col {
+
+    width: 30px;
+}
+
+
+.text-center {
+
+    text-align: center;
+}
+
+
+.text-right {
+
+    text-align: right;
+}
+
+
+/* =========================================================
+   CUSTOMER CREDIT
+========================================================= */
+
+.customer-credit-grid {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 10px;
+
+    padding:
+        0
+        18px;
+}
+
+
+.customer-credit-box {
+
+    min-height: 78px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: center;
+
+    padding:
+        11px
+        12px;
+
+    border-radius: 8px;
+}
+
+
+.customer-credit-box span {
+
+    margin-bottom: 5px;
+
+    color: #475467;
+
+    font-size: 10px;
+
+    font-weight: 500;
+
+    line-height: 1.3;
+}
+
+
+.customer-credit-box strong {
+
+    font-size: 18px;
+
+    font-weight: 700;
+
+    line-height: 1.2;
+
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   CUSTOMER BOX COLORS
+========================================================= */
+
+.credit-green {
+
+    background: #ecfdf3;
+}
+
+
+.credit-green strong {
+
+    color: #12b76a;
+}
+
+
+.credit-blue {
+
+    background: #eff8ff;
+}
+
+
+.credit-blue strong {
+
+    color: #1570ef;
+}
+
+
+.credit-orange {
+
+    background: #fff6ed;
+}
+
+
+.credit-orange strong {
+
+    color: #f79009;
+}
+
+
+.credit-purple {
+
+    background: #f4f3ff;
+}
+
+
+.credit-purple strong {
+
+    color: #6938ef;
+}
+
+
+/* =========================================================
+   OUTSTANDING CUSTOMER CREDIT
+========================================================= */
+
+.outstanding-credit-row {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 10px;
+
+    margin:
+        16px
+        18px
+        18px
+        18px;
+
+    padding-top: 13px;
+
+    border-top:
+        1px solid
+        #eaecf0;
+}
+
+
+.outstanding-credit-row span {
+
+    color: #667085;
+
+    font-size: 11px;
+
+    font-weight: 500;
+}
+
+
+.outstanding-credit-row strong {
+
+    color: #101828;
+
+    font-size: 17px;
+
+    font-weight: 700;
+
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   RIGHT COLUMN
+========================================================= */
+
+.additional-summary-column {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 10px;
+}
+
+
+/* =========================================================
+   SMALL SUMMARY CARD
+========================================================= */
+
+.small-summary-card {
+
+    flex: 1;
+
+    display: flex;
+
+    align-items: flex-start;
+
+    gap: 12px;
+
+    padding: 15px;
+}
+
+
+.small-summary-icon {
+
+    width: 32px;
+    height: 32px;
+
+    min-width: 32px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 8px;
+
+    font-size: 20px;
+}
+
+
+.returns-icon {
+
+    color: #f04438;
+
+    background: #fff1f3;
+}
+
+
+.supplier-icon {
+
+    color: #1570ef;
+
+    background: #eff8ff;
+}
+
+
+.discount-icon {
+
+    color: #f04438;
+
+    background: #fff1f3;
+}
+
+
+/* =========================================================
+   SMALL CARD CONTENT
+========================================================= */
+
+.small-summary-content {
+
+    min-width: 0;
+}
+
+
+.small-summary-title {
+
+    display: block;
+
+    margin-bottom: 3px;
+
+    color: #344054;
+
+    font-size: 12px;
+
+    font-weight: 600;
+}
+
+
+.small-summary-content strong {
+
+    display: block;
+
+    margin-bottom: 2px;
+
+    color: #101828;
+
+    font-size: 19px;
+
+    font-weight: 700;
+
+    line-height: 1.25;
+
+    white-space: nowrap;
+}
+
+
+.small-summary-content p {
+
+    margin: 0;
+
+    color: #667085;
+
+    font-size: 11px;
+
+    font-weight: 400;
+}
+
+
+/* =========================================================
+   RESPONSIVE - LARGE TABLET
+========================================================= */
+
+@media (max-width: 1250px) {
+
+    .daily-bottom-summary-section {
+
+        grid-template-columns:
+            minmax(0, 1.4fr)
+            minmax(280px, 1fr);
+    }
+
+
+    .additional-summary-column {
+
+        grid-column:
+            1 / -1;
+
+        display: grid;
+
+        grid-template-columns:
+            repeat(3, minmax(0, 1fr));
+
+        gap: 12px;
+    }
+
+
+    .small-summary-card {
+
+        min-height: 100px;
+    }
+
+}
+
+
+/* =========================================================
+   RESPONSIVE - TABLET
+========================================================= */
+
+@media (max-width: 900px) {
+
+    .daily-bottom-summary-section {
+
+        grid-template-columns: 1fr;
+    }
+
+
+    .additional-summary-column {
+
+        grid-column: auto;
+    }
+
+}
+
+
+/* =========================================================
+   RESPONSIVE - MOBILE
+========================================================= */
+
+@media (max-width: 600px) {
+
+    .bottom-summary-header {
+
+        padding:
+            16px
+            15px
+            10px
+            15px;
+    }
+
+
+    .top-products-table-wrapper {
+
+        padding-left: 10px;
+
+        padding-right: 10px;
+    }
+
+
+    .customer-credit-grid {
+
+        padding-left: 15px;
+
+        padding-right: 15px;
+    }
+
+
+    .outstanding-credit-row {
+
+        margin-left: 15px;
+
+        margin-right: 15px;
+    }
+
+
+    .additional-summary-column {
+
+        grid-template-columns: 1fr;
+    }
+
+}
+
+#discount_percentage
+{
+    border: none !important;
+}
+@media (max-width: 420px) {
+
+    .customer-credit-grid {
+
+        grid-template-columns: 1fr 1fr;
+    }
+
+
+    .customer-credit-box {
+
+        min-height: 72px;
+
+        padding: 10px;
+    }
+
+
+    .customer-credit-box strong {
+
+        font-size: 16px;
+    }
+
+
+    .outstanding-credit-row {
+
+        align-items: flex-start;
+
+        flex-direction: column;
+
+        gap: 4px;
+    }
+
+}
+/* =========================================================
+   DAY CLOSING SNAPSHOT
+========================================================= */
+
+.day-closing-snapshot {
+
+    width: 100%;
+
+    min-height: 84px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 20px;
+
+    margin-top: 16px;
+
+    margin-bottom: 20px;
+
+    padding:
+        16px
+        18px;
+
+    background: #ffffff;
+
+    border: 1px solid #e7edf4;
+
+    border-radius: 12px;
+
+    box-shadow:
+        0 1px 2px rgba(16, 24, 40, 0.02),
+        0 4px 12px rgba(16, 24, 40, 0.03);
+}
+
+
+/* =========================================================
+   LEFT SIDE
+========================================================= */
+
+.day-closing-left {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 13px;
+
+    min-width: 0;
+}
+
+
+/* =========================================================
+   SUCCESS ICON
+========================================================= */
+
+.day-closing-icon {
+
+    width: 42px;
+    height: 42px;
+
+    min-width: 42px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    color: #ffffff;
+
+    background:
+        linear-gradient(
+            135deg,
+            #12b76a,
+            #32d583
+        );
+
+    border-radius: 50%;
+
+    font-size: 25px;
+}
+
+
+/* =========================================================
+   CONTENT
+========================================================= */
+
+.day-closing-content {
+
+    min-width: 0;
+}
+
+
+.day-closing-content h3 {
+
+    margin: 0;
+
+    color: #101828;
+
+    font-size: 16px;
+
+    font-weight: 700;
+
+    line-height: 1.3;
+}
+
+
+.day-closing-content p {
+
+    margin:
+        3px
+        0
+        0
+        0;
+
+    color: #667085;
+
+    font-size: 12px;
+
+    font-weight: 400;
+}
+
+
+/* =========================================================
+   ACTION AREA
+========================================================= */
+
+.day-closing-actions {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: flex-end;
+
+    gap: 10px;
+
+    flex-shrink: 0;
+}
+
+
+/* =========================================================
+   BUTTON COMMON STYLE
+========================================================= */
+
+.day-summary-btn {
+
+    min-height: 42px;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 7px;
+
+    padding:
+        9px
+        18px;
+
+    border-radius: 7px;
+
+    font-size: 12px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition:
+        all
+        0.2s
+        ease;
+
+    outline: none;
+}
+
+
+.day-summary-btn i {
+
+    font-size: 17px;
+}
+
+
+/* =========================================================
+   PRINT BUTTON
+========================================================= */
+
+.btn-print-summary {
+
+    color: #1570ef;
+
+    background: #ffffff;
+
+    border:
+        1px
+        solid
+        #2e90fa;
+}
+
+
+.btn-print-summary:hover {
+
+    color: #155eef;
+
+    background: #eff8ff;
+
+    border-color: #1570ef;
+}
+
+
+/* =========================================================
+   DETAILED REPORT BUTTON
+========================================================= */
+
+.btn-detailed-report {
+
+    color: #ffffff;
+
+    background:
+        linear-gradient(
+            135deg,
+            #1570ef,
+            #2e90fa
+        );
+
+    border:
+        1px
+        solid
+        #1570ef;
+}
+
+
+.btn-detailed-report:hover {
+
+    color: #ffffff;
+
+    background:
+        linear-gradient(
+            135deg,
+            #155eef,
+            #1570ef
+        );
+
+    border-color: #155eef;
+}
+
+
+/* =========================================================
+   BUTTON ACTIVE
+========================================================= */
+
+.day-summary-btn:active {
+
+    transform: translateY(1px);
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 767px) {
+
+    .day-closing-snapshot {
+
+        align-items: flex-start;
+
+        flex-direction: column;
+
+        padding: 16px;
+    }
+
+
+    .day-closing-actions {
+
+        width: 100%;
+
+        justify-content: flex-start;
+    }
+
+}
+
+
+@media (max-width: 480px) {
+
+    .day-closing-actions {
+
+        flex-direction: column;
+    }
+
+
+    .day-summary-btn {
+
+        width: 100%;
+    }
+
+
+    .day-closing-icon {
+
+        width: 38px;
+        height: 38px;
+
+        min-width: 38px;
+
+        font-size: 22px;
+    }
+
+}
+/* =========================================================
+   DAILY SUMMARY HEADER ACTIONS
+========================================================= */
+
+.daily-summary-head-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+
+    gap: 12px;
+}
+
+
+/* =========================================================
+   DATE SELECTOR
+========================================================= */
+
+.summary-date-selector {
+    position: relative;
+
+    display: flex;
+    align-items: center;
+
+    min-width: 160px;
+    height: 42px;
+
+    padding:
+        0
+        34px
+        0
+        13px;
+
+    background: #ffffff;
+
+    border: 1px solid #dfe5ec;
+
+    border-radius: 8px;
+
+    box-shadow:
+        0 1px 2px rgba(16, 24, 40, 0.03);
+}
+
+
+/* Calendar Icon */
+
+.summary-date-selector > i:first-child {
+    color: #344054;
+
+    font-size: 18px;
+
+    margin-right: 8px;
+}
+
+
+/* Date Input */
+
+.summary-date-selector input[type="date"] {
+    width: 100%;
+
+    padding: 0;
+
+    color: #344054;
+
+    background: transparent;
+
+    border: none;
+
+    outline: none;
+
+    font-size: 13px;
+    font-weight: 600;
+
+    cursor: pointer;
+}
+
+
+/* Hide browser calendar icon */
+
+.summary-date-selector input[type="date"]::-webkit-calendar-picker-indicator {
+    position: absolute;
+
+    width: 100%;
+    height: 100%;
+
+    left: 0;
+    top: 0;
+
+    opacity: 0;
+
+    cursor: pointer;
+}
+
+
+/* Custom dropdown arrow */
+
+.summary-date-selector .date-arrow {
+    position: absolute;
+
+    right: 11px;
+
+    color: #667085;
+
+    font-size: 15px;
+
+    pointer-events: none;
+}
+
+
+/* Hover */
+
+.summary-date-selector:hover {
+    border-color: #b9c3d0;
+}
+
+
+/* Focus */
+
+.summary-date-selector:focus-within {
+    border-color: #2e90fa;
+
+    box-shadow:
+        0 0 0 3px rgba(46, 144, 250, 0.12);
+}
+
+
+/* =========================================================
+   REFRESH BUTTON
+========================================================= */
+
+.summary-refresh-btn {
+    height: 42px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 7px;
+
+    padding:
+        0
+        18px;
+
+    color: #ffffff;
+
+    background:
+        linear-gradient(
+            135deg,
+            #1570ef,
+            #2e90fa
+        );
+
+    border:
+        1px solid
+        #1570ef;
+
+    border-radius: 8px;
+
+    font-size: 13px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition:
+        all
+        0.2s
+        ease;
+}
+
+
+.summary-refresh-btn i {
+    font-size: 17px;
+}
+
+
+/* Hover */
+
+.summary-refresh-btn:hover {
+    color: #ffffff;
+
+    background:
+        linear-gradient(
+            135deg,
+            #155eef,
+            #1570ef
+        );
+
+    border-color: #155eef;
+}
+
+
+/* Active */
+
+.summary-refresh-btn:active {
+    transform: translateY(1px);
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 767px) {
+
+    .daily-summary-head-actions {
+        width: 100%;
+
+        justify-content: flex-start;
+
+        margin-top: 12px;
+    }
+
+
+    .summary-date-selector {
+        flex: 1;
+
+        min-width: 0;
+    }
+
+}
+
+
+@media (max-width: 480px) {
+
+    .daily-summary-head-actions {
+        flex-direction: column;
+
+        align-items: stretch;
+    }
+
+
+    .summary-date-selector,
+    .summary-refresh-btn {
+        width: 100%;
+    }
+
+}
+/* =========================================================
+   DAILY SUMMARY STATS LOADING
+========================================================= */
+
+.daily-summary-stats {
+    position: relative;
+}
+
+.daily-stats-loading-overlay {
+    position: absolute;
+
+    inset: 0;
+
+    z-index: 20;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    background: rgba(255, 255, 255, 0.78);
+
+    border-radius: 12px;
+}
+
+.daily-stats-loading-content {
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    padding: 12px 18px;
+
+    background: #ffffff;
+
+    border: 1px solid #e7edf4;
+
+    border-radius: 9px;
+
+    box-shadow: 0 4px 14px rgba(16, 24, 40, 0.08);
+
+    color: #344054;
+
+    font-size: 13px;
+
+    font-weight: 600;
+}
+
+.daily-stats-loading-content .spinner-border {
+    width: 20px;
+    height: 20px;
+
+    border-width: 2px;
+}
+
+.daily-summary-stats.is-loading .summary-stat-card {
+    opacity: 0.55;
+}
+
+.summary-refresh-btn:disabled {
+    opacity: 0.65;
+
+    cursor: not-allowed;
+}
+/* =========================================================
+   SALES PERFORMANCE LOADING
+========================================================= */
+
+.sales-performance-card {
+    position: relative;
+}
+
+
+.sales-performance-card.is-loading {
+    min-height: 300px;
+}
+
+
+.sales-performance-loading-overlay {
+    position: absolute;
+
+    inset: 0;
+
+    z-index: 20;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    background: rgba(255, 255, 255, 0.78);
+
+    border-radius: 12px;
+}
+
+
+.sales-performance-loading-content {
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    padding: 12px 18px;
+
+    background: #ffffff;
+
+    border: 1px solid #e7edf4;
+
+    border-radius: 9px;
+
+    box-shadow:
+        0 4px 14px
+        rgba(16, 24, 40, 0.08);
+
+    color: #344054;
+
+    font-size: 13px;
+
+    font-weight: 600;
+}
+
+
+.sales-performance-loading-content .spinner-border {
+    width: 20px;
+
+    height: 20px;
+
+    border-width: 2px;
+}
+
+
+.sales-performance-card.is-loading
+.sales-chart-container,
+
+.sales-performance-card.is-loading
+.average-bill-box {
+    opacity: 0.4;
+}

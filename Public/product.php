@@ -328,7 +328,7 @@ include '../Includes/authcheck.php';
     
     <!-- footer Start  -->
     <?php include '../View/footer.php';?> 
-    <script src="../Assets/jquery/new-product.js"></script>
+    <script src="../Assets/jquery/new-product.js?v=2"></script>
     <!-- footer End  -->
 </body>
 </html>

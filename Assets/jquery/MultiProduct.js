@@ -31,6 +31,13 @@ $(document).on("click", "#scan", function (e) {
 $(document).on("keydown", ".barcode", function (e) {
     if (e.key === "Enter") {
         e.preventDefault();
+        $(this).closest("tr").find(".product_name").focus();
+        return false;
+    }
+});
+$(document).on("keydown", ".product_name", function (e) {
+    if (e.key === "Enter") {
+        e.preventDefault();
         return false;
     }
 });
@@ -90,11 +97,11 @@ $(document).on("change", "#barcode-photo-input", async function (e) {
         });
 
 
-        console.log(
-            "Captured image:",
-            image.naturalWidth,
-            image.naturalHeight
-        );
+        // console.log(
+        //     "Captured image:",
+        //     image.naturalWidth,
+        //     image.naturalHeight
+        // );
 
 
         // =============================================
@@ -121,10 +128,10 @@ $(document).on("change", "#barcode-photo-input", async function (e) {
                 result.getText();
 
 
-            console.log(
-                "Barcode detected:",
-                barcode
-            );
+            // console.log(
+            //     "Barcode detected:",
+            //     barcode
+            // );
 
 
             // Put barcode into your existing field
@@ -150,10 +157,10 @@ $(document).on("change", "#barcode-photo-input", async function (e) {
     }
     catch (error) {
 
-        console.error(
-            "Barcode detection error:",
-            error
-        );
+        // console.error(
+        //     "Barcode detection error:",
+        //     error
+        // );
 
 
         toastr.warning(
@@ -211,7 +218,7 @@ function appendProductRow(product) {
     var ProdSellPrice = product.ProdSellPrice ?? 0;
     var opening_qty = product.opening_qty ?? 0;
     var low_stock_qty = product.low_stock_qty ?? 0;
-
+    var barcodeBtn =`<a href="../Barcodes/barcode_one.php?label=${PDID}_${ProdSellPrice}" class=" border-0 bg-transparent w-100" style="font-size: 1.5rem;" data-id="${PDID}" target="_blank_"><i class="ti ti-barcode"></i></a>`;
     var row = `
         <tr class="row-saved" data-pdid="${PDID}">
 
@@ -276,13 +283,14 @@ function appendProductRow(product) {
                     <i class="ti ti-device-floppy"></i>
 
                 </button>
+                ${barcodeBtn}
             </td>
 
         </tr>
     `;
 
 
-    $("#product-table-body").append(row);
+    $("#product-table-body").prepend(row);
 
 
     // Newly appended row
@@ -497,7 +505,7 @@ function updateProductRow($row) {
 
         success: function (response) {
 
-            console.log(response);
+            // console.log(response);
 
 
             if (response.status == 1) {
@@ -576,6 +584,7 @@ $(document).ready(function(){
     $("#headerCollapse2").trigger("click");
     getsubcategories("Subcategories_SCID");
     loadMultiProducts();
+    $("#Barcode").focus();
     $(document).on("change", "#product-table-body .row-saved input, #product-table-body .row-saved select", function () 
     {
 
@@ -626,7 +635,7 @@ $(document).ready(function(){
 
             success: function (response) {
 
-                console.log(response);
+                // console.log(response);
 
                 if (response.status == 0) {
                     toastr.error(
@@ -706,12 +715,14 @@ $(document).ready(function(){
             contentType: false,
 
             beforeSend: function () {
-                $("#btn-submit").prop("disabled", true);
+                $("#btn-submit").prop("disabled", true);         
+                toastr.warning("Product Processing.");   
+                // $(".form-control").prop("disabled", true);
             },
 
             success: function (response) {
 
-                console.log(response);
+                // console.log(response); 
 
 
                 // ==========================================
@@ -745,6 +756,14 @@ $(document).ready(function(){
                     // ==========================================
                     // Build product data from submitted form
                     // ==========================================
+                    var cost_type = data.get("cost_type") || 1;
+                    var ProdSellPrice = data.get("ProdSellPrice") || 0;
+                    var ProdPurchasePrice = data.get("ProdPurchasePrice") || 0;
+                    if (cost_type==2)
+                    {
+                        ProdPurchasePrice = ProdSellPrice - (ProdSellPrice * ProdPurchasePrice /100)
+                    }
+                    
 
                     var product = {
                         PDID: response.product.PDID,
@@ -756,8 +775,7 @@ $(document).ready(function(){
                         Subcategories_SCID:
                             data.get("Subcategories_SCID") || "",
 
-                        ProdPurchasePrice:
-                            data.get("ProdPurchasePrice") || 0,
+                        ProdPurchasePrice: ProdPurchasePrice,
 
                         ProdSellPrice:
                             data.get("ProdSellPrice") || 0,
@@ -782,6 +800,7 @@ $(document).ready(function(){
                     // ==========================================
 
                     form.reset();
+                    $(document).find(".barcode").first().focus().select();
 
                     getsubcategories("Subcategories_SCID");
 
@@ -889,12 +908,15 @@ $(document).ready(function(){
                 toastr.error(
                     "Something went wrong while submitting the product."
                 );
+                $(document).find(".barcode").first().focus().select();
 
             },
 
             complete: function () {
 
                 $("#btn-submit").prop("disabled", false);
+                $(".form-control").prop("disabled", false);
+                $(document).find(".barcode").first().focus().select();
 
             }
         });

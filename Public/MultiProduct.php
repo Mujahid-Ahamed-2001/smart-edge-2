@@ -12,6 +12,12 @@ $shop_id = $_SESSION['shop_id'];
   include '../View/head.php';
   // include '../View/loader.php';
   ?>
+  <style>
+    button.btn-action:focus {
+    border: 1px solid red;
+}
+
+  </style>
   <link rel="stylesheet" href="../Assets/css/MultiProduct.css">
 </head>
 <body>
@@ -94,6 +100,7 @@ $shop_id = $_SESSION['shop_id'];
                                                 <th class="col-barcode">Barcode</th>
                                                 <th class="col-product">Product Name</th>
                                                 <th class="col-category">Category</th>
+                                                <th class="col-cost">Cost Type</th>
                                                 <th class="col-cost">Cost (Rs.)</th>
                                                 <th class="col-price">Selling Price (Rs.)</th>
                                                 <th class="col-qty">Opening Qty</th>
@@ -112,6 +119,12 @@ $shop_id = $_SESSION['shop_id'];
                                                 </td>
                                                 <td>
                                                     <select class="form-select category" name="Subcategories_SCID" id="Subcategories_SCID">
+                                                    </select>
+                                                </td>
+                                                <td>
+                                                    <select class="form-select cost_type" name="cost_type" id="cost_type">
+                                                        <option value="1">Rs.</option>
+                                                        <option value="2">%</option>
                                                     </select>
                                                 </td>
                                                 <td>
@@ -190,7 +203,7 @@ $shop_id = $_SESSION['shop_id'];
                     <!-- <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script> -->
                     <!-- <script src="https://unpkg.com/@zxing/library@0.21.3/umd/index.min.js"></script> -->
                     <script src="https://unpkg.com/@zxing/library@0.21.3/umd/index.min.js"></script>
-                    <script src="../Assets/jquery/MultiProduct.js"></script>
+                    <script src="../Assets/jquery/MultiProduct.js?v=16"></script>
                     <!-- footer End  -->
                 </div>
             </div>

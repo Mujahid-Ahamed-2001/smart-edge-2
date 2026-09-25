@@ -182,7 +182,7 @@ function fetchProducts($table, $query='', formData='',PDID='')
                         </div>
                     `;
                 }
-                var barcodeBtn =`<button class="btn_open_barcode border-0 bg-transparent w-100" style="font-size: 1.5rem;" data-id="${PDID}"><i class="ti ti-barcode"></i></button>`;
+                var barcodeBtn =`<a href="../Barcodes/barcode_one.php?label=${PDID}_${ProdSellPrice}" class=" border-0 bg-transparent w-100" style="font-size: 1.5rem;" data-id="${PDID}" target="_blank_"><i class="ti ti-barcode"></i></a>`;
                 $table.find('tbody').append(`
                         <tr data-id="${PDID}"  data-itemno="${ItemNo}" id="row_${PDID}" class="tbl_row">
                             <td><input type="checkbox" class="form-checkbox proCheck" value="${PDID}" data-id="${PDID}"></td><td>
@@ -381,7 +381,7 @@ function fetchProducts1($table,PDID)
                             </div>
                         `;
                     }
-                    var barcodeBtn =`<button class="btn_open_barcode border-0 bg-transparent w-100" style="font-size: 1.5rem;" data-id="${PDID}"><i class="ti ti-barcode"></i></button>`;
+                    var barcodeBtn =`<a href="../Barcodes/barcode_one.php?label=${PDID}_${ProdSellPrice}" class=" border-0 bg-transparent w-100" style="font-size: 1.5rem;" data-id="${PDID}" target="_blank_"><i class="ti ti-barcode"></i></a>`;
                     $table.find('tbody #row_'+PDID).html(`<td><input type="checkbox" class="form-checkbox proCheck" value="${PDID}" data-id="${PDID}"></td><td>
                                     <div style="display:flex; align-items:center;">
                                         <img class="img" src="${ProdImage}" style="width:50px; height:50px; margin-right:15px; border-radius:5px; box-shadow: 5px 5px 5px #000000a1;">
@@ -969,6 +969,19 @@ $(document).ready(function () {
         var label_price = $(this).val();
         $("#label_price").val(label_price);
     });//change
+    $("#print_barcode").on("submit", function(e){
+        e.preventDefault();
+        let formData = new FormData(this);
+        let url = $(this).attr("action");
+        $.ajax({
+            url:url,
+            data:formData,
+            success: function(response)
+            {
+
+            }
+        })
+    })
     $("#multieditproducts").on("submit", function(e){
         e.preventDefault();
         let formData = new FormData(this);
