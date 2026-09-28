@@ -2821,3 +2821,79 @@
 .average-bill-box {
     opacity: 0.4;
 }
+
+/* =========================================================
+   INVOICE SUMMARY LOADING
+========================================================= */
+
+.invoice-summary-card {
+    position: relative;
+}
+
+
+.invoice-summary-card.is-loading {
+    min-height: 300px;
+}
+
+
+.invoice-summary-loading-overlay {
+    position: absolute;
+
+    inset: 0;
+
+    z-index: 20;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    background: rgba(255, 255, 255, 0.78);
+
+    border-radius: 12px;
+}
+
+
+.invoice-summary-loading-content {
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    padding: 12px 18px;
+
+    background: #ffffff;
+
+    border: 1px solid #e7edf4;
+
+    border-radius: 9px;
+
+    box-shadow:
+        0 4px 14px
+        rgba(16, 24, 40, 0.08);
+
+    color: #344054;
+
+    font-size: 13px;
+
+    font-weight: 600;
+}
+
+
+.invoice-summary-loading-content .spinner-border {
+    width: 20px;
+    height: 20px;
+
+    border-width: 2px;
+}
+
+
+.invoice-summary-card.is-loading
+.invoice-summary-list {
+    opacity: 0.4;
+}
+.summary-card {
+    color: #0e9384;
+}

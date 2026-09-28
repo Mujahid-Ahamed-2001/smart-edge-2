@@ -324,14 +324,14 @@ $cashCounterEnabled = false;
                                         class="summary-blue"
                                         id="invoice_completed"
                                     >
-                                        142
+                                        0
                                     </strong>
 
                                 </div>
 
 
                                 <!-- Cash Sales -->
-                                <div class="invoice-summary-row">
+                                <div class="invoice-summary-row" id="invoice_cash_sales_row">
 
                                     <span>
                                         Cash Sales
@@ -341,7 +341,23 @@ $cashCounterEnabled = false;
                                         class="summary-green"
                                         id="invoice_cash_sales"
                                     >
-                                        81
+                                        0
+                                    </strong>
+
+                                </div>
+
+                                <!-- Card Sales -->
+                                <div class="invoice-summary-row" id="invoice_card_sales_row">
+
+                                    <span>
+                                        Card Sales
+                                    </span>
+
+                                    <strong
+                                        class="summary-card"
+                                        id="invoice_card_sales"
+                                    >
+                                        0
                                     </strong>
 
                                 </div>
@@ -358,7 +374,7 @@ $cashCounterEnabled = false;
                                         class="summary-orange"
                                         id="invoice_credit_sales"
                                     >
-                                        19
+                                        0
                                     </strong>
 
                                 </div>
@@ -375,7 +391,7 @@ $cashCounterEnabled = false;
                                         class="summary-purple"
                                         id="invoice_mixed_payments"
                                     >
-                                        42
+                                        0
                                     </strong>
 
                                 </div>
@@ -392,7 +408,7 @@ $cashCounterEnabled = false;
                                         class="summary-dark"
                                         id="invoice_items_sold"
                                     >
-                                        376
+                                        0
                                     </strong>
 
                                 </div>

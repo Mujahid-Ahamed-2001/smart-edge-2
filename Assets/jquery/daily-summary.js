@@ -1593,15 +1593,342 @@ function escapeHtml(value)
         .html();
 
 }
+function setInvoiceSummaryLoading(isLoading)
+{
+    let $section =
+        $(".invoice-summary-card");
+
+
+    if (!$section.length)
+    {
+        return;
+    }
+
+
+    if (isLoading)
+    {
+        $section.addClass(
+            "is-loading"
+        );
+
+
+        if (
+            !$section.find(
+                ".invoice-summary-loading-overlay"
+            ).length
+        )
+        {
+            $section.append(`
+
+                <div class="invoice-summary-loading-overlay">
+
+                    <div class="invoice-summary-loading-content">
+
+                        <div
+                            class="spinner-border text-primary"
+                            role="status"
+                        ></div>
+
+                        <span>
+                            Loading invoice summary...
+                        </span>
+
+                    </div>
+
+                </div>
+
+            `);
+        }
+    }
+    else
+    {
+        $section.removeClass(
+            "is-loading"
+        );
+
+
+        $section.find(
+            ".invoice-summary-loading-overlay"
+        ).remove();
+    }
+}
+// =========================================================
+// Invoice Summary AJAX
+// =========================================================
+
+let invoiceSummaryRequest = null;
+
+
+function getInvoiceSummary()
+{
+    let selectedDate =
+        $("#daily_summary_date").val();
+
+
+    // ==========================================
+    // Validate Date
+    // ==========================================
+
+    if (!selectedDate)
+    {
+        toastr.warning(
+            "Please select a date."
+        );
+
+
+        return $.Deferred()
+            .reject()
+            .promise();
+    }
+
+
+    // ==========================================
+    // Abort Previous Request
+    // ==========================================
+
+    if (
+        invoiceSummaryRequest &&
+        invoiceSummaryRequest.readyState !== 4
+    )
+    {
+        invoiceSummaryRequest.abort();
+    }
+
+
+    // ==========================================
+    // Show Loader
+    // ==========================================
+
+    setInvoiceSummaryLoading(
+        true
+    );
+
+
+    // ==========================================
+    // AJAX
+    // ==========================================
+
+    invoiceSummaryRequest =
+        $.ajax({
+
+            url:
+                "../AJAX/DailySummary/getInvoiceSummary.php",
+
+            type:
+                "POST",
+
+            dataType:
+                "json",
+
+            data: {
+
+                date:
+                    selectedDate
+
+            },
+
+
+            success:
+                function (response)
+                {
+
+                    console.log(
+                        "Invoice Summary:",
+                        response
+                    );
+
+
+                    if (
+                        response.status == 1 &&
+                        response.data
+                    )
+                    {
+                        renderInvoiceSummary(
+                            response.data
+                        );
+                    }
+                    else
+                    {
+                        resetInvoiceSummary();
+
+
+                        toastr.error(
+                            response.message ||
+                            "Unable to load invoice summary."
+                        );
+                    }
+
+                },
+
+
+            error:
+                function (
+                    xhr,
+                    status,
+                    error
+                )
+                {
+
+                    if (
+                        status === "abort"
+                    )
+                    {
+                        return;
+                    }
+
+
+                    console.error(
+                        "Invoice Summary Error:",
+                        error
+                    );
+
+
+                    console.error(
+                        xhr.responseText
+                    );
+
+
+                    resetInvoiceSummary();
+
+
+                    toastr.error(
+                        "Something went wrong while loading invoice summary."
+                    );
+
+                },
+
+
+            complete:
+                function ()
+                {
+
+                    setInvoiceSummaryLoading(
+                        false
+                    );
+
+                }
+
+        });
+
+
+    return invoiceSummaryRequest;
+}
+function renderInvoiceSummary(data)
+{
+
+    // ==========================================
+    // Completed
+    // ==========================================
+
+    $("#invoice_completed").text(
+        Number(data.completed) || 0
+    );
+
+
+    // ==========================================
+    // Cash
+    // ==========================================
+
+    if (data.showCashSales)
+    {
+
+        $("#invoice_cash_sales_row")
+            .show();
+
+
+        $("#invoice_cash_sales").text(
+            Number(data.cashSales) || 0
+        );
+
+    }
+    else
+    {
+
+        $("#invoice_cash_sales_row")
+            .hide();
+
+    }
+
+
+    // ==========================================
+    // Card
+    // ==========================================
+
+    if (data.showCardSales)
+    {
+
+        $("#invoice_card_sales_row")
+            .show();
+
+
+        $("#invoice_card_sales").text(
+            Number(data.cardSales) || 0
+        );
+
+    }
+    else
+    {
+
+        $("#invoice_card_sales_row")
+            .hide();
+
+    }
+
+
+    // ==========================================
+    // Credit
+    // ==========================================
+
+    $("#invoice_credit_sales").text(
+        Number(data.creditSales) || 0
+    );
+
+
+    // ==========================================
+    // Mixed
+    // ==========================================
+
+    $("#invoice_mixed_payments").text(
+        Number(data.mixedPayments) || 0
+    );
+
+
+    // ==========================================
+    // Items Sold
+    // ==========================================
+
+    $("#invoice_items_sold").text(
+        Number(data.itemsSold) || 0
+    );
+
+}
+function resetInvoiceSummary()
+{
+
+    $("#invoice_completed").text(0);
+
+    $("#invoice_cash_sales").text(0);
+
+    $("#invoice_card_sales").text(0);
+
+    $("#invoice_credit_sales").text(0);
+
+    $("#invoice_mixed_payments").text(0);
+
+    $("#invoice_items_sold").text(0);
+
+}
 $(document).ready(function(){
     $("#headerCollapse2").trigger("click");
     getDailySummaryStats();
     getSalesPerformance();
+    getInvoiceSummary();
     $(document).on("click", "#daily_summary_refresh", function ()
         {
 
             getDailySummaryStats();
             getSalesPerformance();
+            getInvoiceSummary();
 
         }
     );
@@ -1643,7 +1970,8 @@ $(document).ready(function(){
 
             $.when(
                 getDailySummaryStats(),
-                getSalesPerformance()
+                getSalesPerformance(),
+                getInvoiceSummary()
             )
             .always(
                 function ()
